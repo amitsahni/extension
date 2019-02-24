@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.Intent.*
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.os.Handler
 import android.os.Looper
 import android.support.annotation.*
@@ -18,6 +19,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import java.io.File
 
 /*------------------------------------Context---------------------------------------------*/
 
@@ -127,6 +129,7 @@ fun Context.dpToPx(dp: Int): Float {
     val displayMetrics = this.resources.displayMetrics
     return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)).toFloat()
 }
+
 /*------------------------------------Fragment---------------------------------------------*/
 
 fun Fragment.resColor(@ColorRes colorRes: Int) = this.context!!.resColor(colorRes)
@@ -151,6 +154,11 @@ fun Fragment.resStrArray(@ArrayRes strArrRes: Int) = this.context!!.resStrArray(
 fun Fragment.hideSoftKeyboard() {
     activity?.hideSoftKeyboard()
 }
+
+inline fun <reified T : Any> Fragment.extra(key: String, default: T? = null) = lazy {
+    val value = arguments?.get(key)
+    if (value is T) value else default
+}
 /*------------------------------------Activity---------------------------------------------*/
 
 
@@ -162,5 +170,10 @@ fun Activity.hideSoftKeyboard() {
         ) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
     }
+}
+
+inline fun <reified T : Any> Activity.extra(key: String, default: T? = null) = lazy {
+    val value = intent?.extras?.get(key)
+    if (value is T) value else default
 }
 

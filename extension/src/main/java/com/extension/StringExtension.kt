@@ -1,6 +1,18 @@
 package com.extension
 
-import android.view.View
+import android.text.Editable
+import android.util.Patterns
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import java.lang.Exception
+
+
+object G {
+    val gson = GsonBuilder()
+        .disableHtmlEscaping()
+        .setPrettyPrinting()
+        .create()
+}
 
 /**
  * Converts string to integer safely otherwise returns zero
@@ -20,26 +32,37 @@ fun String.toCamelCase(): String {
     return titleText.trim { it <= ' ' }
 }
 
-fun String.isEmptyOrNull(f: String.() -> Unit) {
+fun String.isEmptyOrNull(string: String.() -> Unit) {
     if (!isNullOrBlank()) {
-        f()
+        string()
     }
 }
 
 /**
  * Extension method to check if String is Number.
  */
-fun String.isNumeric(): Boolean {
-    val p = "^[0-9]+$".toRegex()
-    return matches(p)
-}
+fun String.isNumeric(): Boolean = matches("^[0-9]+$".toRegex())
 
 /**
  * Extension method to check if String is Email.
  */
-fun String.isEmail(): Boolean {
-    val p = "^(\\w)+(\\.\\w+)*@(\\w)+((\\.\\w+)+)\$".toRegex()
-    return matches(p)
-}
+fun String.isEmail(): Boolean = Patterns.EMAIL_ADDRESS.matcher(this).matches()
+
+/**
+ * Extension method to check if String is Email.
+ */
+fun String.isUrl(): Boolean = Patterns.WEB_URL.matcher(this).matches()
 
 fun join(vararg params: Any?) = params.joinToString()
+
+fun Any.toJson(): String = try {
+    G.gson.toJson(this)
+} catch (e: Exception) {
+    ""
+}
+
+inline fun <reified T : Any> String.fromJson() = G.gson.fromJson<T>(this, T::class.java)
+
+fun String.toEditable(): Editable = Editable.Factory.getInstance().newEditable(this)
+
+fun Int.times(predicate: (Int) -> Unit) = repeat(this, predicate)

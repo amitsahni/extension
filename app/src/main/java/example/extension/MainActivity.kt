@@ -8,12 +8,17 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.extension.*
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
+
+
+    private val id1 by extra("Hello", "fg")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        Log.i(localClassName, "ids = $id1")
 //        resColor(R.color.notification_icon_bg_color)
 //        val intent = intent<MainActivity>()
 //        val int = intent<MainActivity> {
@@ -65,6 +70,28 @@ class MainActivity : AppCompatActivity() {
             btn.toggleVisibility()
             btn.toUpperCase()
             btn.textSize(10f)
+            createImageFile("abc.jpg")
+            createImageFile("abc.text")
+            val file = getImageFile("abc.jpg")
+            val a = "10"
+            println(file?.toString())
+            println(now())
+            println(currentUTC)
+            println(currentUTC("dd-MM-yyyy", Locale.ENGLISH))
+            println(now().toUTC)
+            val milli = 1451005003353
+            println(milli.toUTC())
+
         }
+        val a = "10"
+        a.toJson()
+        a.fromJson<String>()
+        val array = emptyList<String>()
+        array.isBlank()
+        a.toInt().times {
+            it.toString()
+        }
+
+
     }
 }

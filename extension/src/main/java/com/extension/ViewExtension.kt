@@ -232,7 +232,7 @@ fun TextView.textSize(px: Float) {
     setTextSize(TypedValue.COMPLEX_UNIT_SP, sp)
 }
 
-private val TextView.value
+val TextView.value
     get() = text.toString()
 
 
