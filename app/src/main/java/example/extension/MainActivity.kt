@@ -1,11 +1,8 @@
 package example.extension
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.TextView
 import com.extension.*
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
@@ -68,8 +65,8 @@ class MainActivity : AppCompatActivity() {
         btn1.click {
             btn.enable()
             btn.toggleVisibility()
-            btn.toUpperCase()
-            btn.textSize(10f)
+            // btn.toUpperCase()
+            btn.textSize(20f)
             createImageFile("abc.jpg")
             createImageFile("abc.text")
             val file = getImageFile("abc.jpg")

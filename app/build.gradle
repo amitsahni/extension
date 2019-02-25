@@ -30,4 +30,10 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation project(':extension')
+    // Koin for Android
+    implementation 'org.koin:koin-android:1.0.2'
+    // or Koin for Lifecycle scoping
+    implementation 'org.koin:koin-android-scope:1.0.2'
+    // or Koin for Android Architecture ViewModel
+    implementation 'org.koin:koin-android-viewmodel:1.0.2'
 }

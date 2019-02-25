@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
 import android.support.annotation.ColorRes
-import android.support.v4.content.ContextCompat
 import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.AppCompatImageView
@@ -227,9 +226,7 @@ fun TextView.toLowerCase() {
 }
 
 fun TextView.textSize(px: Float) {
-    val scaledDensity = resources.displayMetrics.scaledDensity
-    val sp = (px / scaledDensity)
-    setTextSize(TypedValue.COMPLEX_UNIT_SP, sp)
+    setTextSize(TypedValue.COMPLEX_UNIT_PX, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, px, resources.displayMetrics))
 }
 
 val TextView.value
