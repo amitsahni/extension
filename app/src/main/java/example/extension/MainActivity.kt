@@ -1,21 +1,54 @@
 package example.extension
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import com.activity.Builder
 import com.extension.*
 import kotlinx.android.synthetic.main.activity_main.*
+import org.koin.android.ext.android.getKoin
+import org.koin.android.ext.android.inject
+import org.koin.android.scope.ext.android.bindScope
+import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
 
     private val id1 by extra("Hello", "fg")
+    val service: Builder by inject()
+    val context: Context by inject()
+    val httpModule: HttpModule by inject("http")
+    val httpModule2: HttpModule by inject("factory")
+    val viewModels by viewModel<AppViewModel>()
+    val components: Components by lazy {
+        Components()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val scope = getKoin().getOrCreateScope("mainActivity")
+        bindScope(scope)
+        //bindScope(components.scope)
+
         setContentView(R.layout.activity_main)
         Log.i(localClassName, "ids = $id1")
+        Log.i(localClassName, "context = ${context}")
+        Log.i(localClassName, "builder = ${service}")
+        Log.i(localClassName, "httpModule = ${httpModule}")
+        Log.i(localClassName, "httpModule = ${httpModule}")
+        Log.i(localClassName, "httpModule.Context = ${httpModule.init()}")
+        Log.i(localClassName, "httpModule2 = ${httpModule2}")
+        Log.i(localClassName, "httpModule2 = ${httpModule2}")
+        Log.i(localClassName, "httpModule2.Context = ${httpModule2.init()}")
+
+        Log.i(localClassName, "viewModels = $viewModels")
+        Log.i(localClassName, "viewModels.init = ${viewModels.init()}")
+
+        Log.i(localClassName, "components.context = ${components.context}")
+        Log.i(localClassName, "components.service = ${components.service}")
+        Log.i(localClassName, "components.viewModels = ${components.viewModels}")
 //        resColor(R.color.notification_icon_bg_color)
 //        val intent = intent<MainActivity>()
 //        val int = intent<MainActivity> {
