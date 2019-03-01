@@ -7,9 +7,9 @@ import android.util.Log
 import com.activity.Builder
 import com.extension.*
 import kotlinx.android.synthetic.main.activity_main.*
-import org.koin.android.ext.android.getKoin
 import org.koin.android.ext.android.inject
 import org.koin.android.scope.ext.android.bindScope
+import org.koin.android.scope.ext.android.getOrCreateScope
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 
@@ -22,15 +22,15 @@ class MainActivity : AppCompatActivity() {
     val httpModule: HttpModule by inject("http")
     val httpModule2: HttpModule by inject("factory")
     val viewModels by viewModel<AppViewModel>()
+    val abcModule by inject<AbcModule>()
     val components: Components by lazy {
         Components()
     }
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val scope = getKoin().getOrCreateScope("mainActivity")
-        bindScope(scope)
-        //bindScope(components.scope)
+        bindScope(getOrCreateScope("mainActivity"))
 
         setContentView(R.layout.activity_main)
         Log.i(localClassName, "ids = $id1")
@@ -48,7 +48,9 @@ class MainActivity : AppCompatActivity() {
 
         Log.i(localClassName, "components.context = ${components.context}")
         Log.i(localClassName, "components.service = ${components.service}")
-        Log.i(localClassName, "components.viewModels = ${components.viewModels}")
+        Log.i(localClassName, "AbcModule().components.context = ${abcModule.init()}")
+        "Hello".printInfo()
+        "Hello".printError()
 //        resColor(R.color.notification_icon_bg_color)
 //        val intent = intent<MainActivity>()
 //        val int = intent<MainActivity> {
@@ -111,7 +113,8 @@ class MainActivity : AppCompatActivity() {
             println(now().toUTC)
             val milli = 1451005003353
             println(milli.toUTC())
-
+            //startActivity<SecondActivity>()
+            startActivity<SecondActivity>()
         }
         val a = "10"
         a.toJson()

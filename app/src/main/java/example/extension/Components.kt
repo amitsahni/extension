@@ -10,6 +10,6 @@ import org.koin.standalone.inject
 class Components : KoinComponent {
     val context: Context by inject()
     val service: Builder by inject()
-    val viewModels by viewModel<AppViewModel>(get())
+//    val viewModels by viewModel<AppViewModel>(get())
 
 }

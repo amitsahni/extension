@@ -7,19 +7,18 @@ import android.content.Intent
 import android.content.Intent.*
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.os.Handler
 import android.os.Looper
 import android.support.annotation.*
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
+import android.support.v4.util.Pair
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import java.io.File
 
 /*------------------------------------Context---------------------------------------------*/
 
@@ -55,19 +54,24 @@ inline fun <reified T : Activity> Context.intent(body: Intent.() -> Unit): Inten
     return intent
 }
 
-inline fun <reified T : Activity> Context?.startActivity(bundle: Bundle) = {
+inline fun <reified T : Activity> Context.startActivity(bundle: Bundle = Bundle()) {
     val intent = Intent(this, T::class.java)
     intent.putExtras(bundle)
-    this?.startActivity(intent)
+    ContextCompat.startActivity(this, intent, Bundle())
 }
 
-inline fun <reified T : Activity> Context?.startActivity(bundle: Bundle, enterResId: Int = 0, exitResId: Int = 0) {
-    this?.let {
-        val intent = Intent(it, T::class.java)
-        intent.putExtras(bundle)
-        val bun = ActivityOptionsCompat.makeCustomAnimation(it, enterResId, exitResId).toBundle()
-        ContextCompat.startActivity(it, intent, bun)
-    }
+inline fun <reified T : Activity> Context.startActivity(bundle: Bundle = Bundle(), enterResId: Int = 0, exitResId: Int = 0) {
+    val intent = Intent(this, T::class.java)
+    intent.putExtras(bundle)
+    val optionsCompat = ActivityOptionsCompat.makeCustomAnimation(this, enterResId, exitResId)
+    ContextCompat.startActivity(this, intent, optionsCompat.toBundle())
+}
+
+inline fun <reified T : Activity> Activity.startActivity(bundle: Bundle = Bundle(), sharedElements: Pair<View, String>) {
+    val intent = Intent(this, T::class.java)
+    intent.putExtras(bundle)
+    val optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(this, sharedElements)
+    ContextCompat.startActivity(this, intent, optionsCompat.toBundle())
 }
 
 

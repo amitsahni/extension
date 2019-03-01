@@ -2,9 +2,7 @@ package com.extension
 
 import android.text.Editable
 import android.util.Patterns
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import java.lang.Exception
 
 
 object G {
@@ -66,3 +64,5 @@ inline fun <reified T : Any> String.fromJson() = G.gson.fromJson<T>(this, T::cla
 fun String.toEditable(): Editable = Editable.Factory.getInstance().newEditable(this)
 
 fun Int.times(predicate: (Int) -> Unit) = repeat(this, predicate)
+
+

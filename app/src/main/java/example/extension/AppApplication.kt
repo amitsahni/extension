@@ -7,6 +7,6 @@ class AppApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        startKoin(this, listOf(myModule, viewModelModule))
+        startKoin(this, listOf(myModule, viewModelModule, scope))
     }
 }
