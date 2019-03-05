@@ -67,14 +67,6 @@ inline fun <reified T : Activity> Context.startActivity(bundle: Bundle = Bundle(
     ContextCompat.startActivity(this, intent, optionsCompat.toBundle())
 }
 
-inline fun <reified T : Activity> Activity.startActivity(bundle: Bundle = Bundle(), sharedElements: Pair<View, String>) {
-    val intent = Intent(this, T::class.java)
-    intent.putExtras(bundle)
-    val optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(this, sharedElements)
-    ContextCompat.startActivity(this, intent, optionsCompat.toBundle())
-}
-
-
 fun Context.share(text: String, subject: String = ""): Boolean {
     val intent = Intent()
     intent.type = "text/plain"
@@ -119,7 +111,7 @@ fun Context.rate(): Boolean =
     browse("market://details?id=$packageName") or browse("http://play.google.com/store/apps/details?id=$packageName")
 
 
-fun Context.runOnUiThread(f: Context.() -> Unit) {
+fun runOnUiThread(f: () -> Unit) {
     val handler = Handler(Looper.getMainLooper())
     handler.post {
         f()
@@ -163,6 +155,33 @@ inline fun <reified T : Any> Fragment.extra(key: String, default: T? = null) = l
     val value = arguments?.get(key)
     if (value is T) value else default
 }
+
+inline fun <reified T : Activity> Fragment.startActivity(bundle: Bundle = Bundle(), sharedElements: Pair<View, String>) {
+    this.activity?.also {
+        val intent = Intent(this.context, T::class.java)
+        intent.putExtras(bundle)
+        val optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(it, sharedElements)
+        ContextCompat.startActivity(this.context!!, intent, optionsCompat.toBundle())
+    }
+}
+
+inline fun <reified T : Activity> Fragment.startActivityForResult(bundle: Bundle = Bundle(), resultCode: Int) {
+    this.context?.also {
+        val intent = Intent(it, T::class.java)
+        intent.putExtras(bundle)
+        startActivityForResult(intent, resultCode)
+    }
+}
+
+
+inline fun <reified T : Activity> Fragment.startActivityForResult(bundle: Bundle = Bundle(), resultCode: Int, sharedElements: Pair<View, String>) {
+    this.activity?.also {
+        val intent = Intent(this.context, T::class.java)
+        intent.putExtras(bundle)
+        val optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(it, sharedElements)
+        startActivityForResult(intent, resultCode, optionsCompat.toBundle())
+    }
+}
 /*------------------------------------Activity---------------------------------------------*/
 
 
@@ -179,5 +198,26 @@ fun Activity.hideSoftKeyboard() {
 inline fun <reified T : Any> Activity.extra(key: String, default: T? = null) = lazy {
     val value = intent?.extras?.get(key)
     if (value is T) value else default
+}
+
+inline fun <reified T : Activity> Activity.startActivity(bundle: Bundle = Bundle(), sharedElements: Pair<View, String>) {
+    val intent = Intent(this, T::class.java)
+    intent.putExtras(bundle)
+    val optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(this, sharedElements)
+    ContextCompat.startActivity(this, intent, optionsCompat.toBundle())
+}
+
+inline fun <reified T : Activity> Activity.startActivityForResult(bundle: Bundle = Bundle(), resultCode: Int) {
+    val intent = Intent(this, T::class.java)
+    intent.putExtras(bundle)
+    startActivityForResult(intent, resultCode)
+}
+
+
+inline fun <reified T : Activity> Activity.startActivityForResult(bundle: Bundle = Bundle(), resultCode: Int, sharedElements: Pair<View, String>) {
+    val intent = Intent(this, T::class.java)
+    intent.putExtras(bundle)
+    val optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(this, sharedElements)
+    startActivityForResult(intent, resultCode, optionsCompat.toBundle())
 }
 
