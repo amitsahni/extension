@@ -113,7 +113,6 @@ class MainActivity : AppCompatActivity() {
             println(now().toUTC)
             val milli = 1451005003353
             println(milli.toUTC())
-            //startActivity<SecondActivity>()
             startActivity<SecondActivity>()
         }
         val a = "10"

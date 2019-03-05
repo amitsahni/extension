@@ -6,14 +6,18 @@ import android.content.Context
 import android.content.Intent
 import android.content.Intent.*
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.support.annotation.*
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
+import android.support.v4.app.FragmentTransaction
 import android.support.v4.content.ContextCompat
 import android.support.v4.util.Pair
+import android.support.v7.app.AppCompatActivity
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
@@ -54,15 +58,18 @@ inline fun <reified T : Activity> Context.intent(body: Intent.() -> Unit): Inten
     return intent
 }
 
-inline fun <reified T : Activity> Context.startActivity(bundle: Bundle = Bundle()) {
+inline fun <reified T : Activity> Context.startActivity(bundle: Bundle = Bundle(), flag: Int = Intent.FLAG_ACTIVITY_NEW_TASK) {
     val intent = Intent(this, T::class.java)
     intent.putExtras(bundle)
+    intent.addFlags(flag)
     ContextCompat.startActivity(this, intent, Bundle())
 }
 
-inline fun <reified T : Activity> Context.startActivity(bundle: Bundle = Bundle(), enterResId: Int = 0, exitResId: Int = 0) {
+inline fun <reified T : Activity> Context.startActivity(enterResId: Int = 0, exitResId: Int = 0,
+                                                        bundle: Bundle = Bundle(), flag: Int = Intent.FLAG_ACTIVITY_NEW_TASK) {
     val intent = Intent(this, T::class.java)
     intent.putExtras(bundle)
+    intent.addFlags(flag)
     val optionsCompat = ActivityOptionsCompat.makeCustomAnimation(this, enterResId, exitResId)
     ContextCompat.startActivity(this, intent, optionsCompat.toBundle())
 }
@@ -156,30 +163,65 @@ inline fun <reified T : Any> Fragment.extra(key: String, default: T? = null) = l
     if (value is T) value else default
 }
 
-inline fun <reified T : Activity> Fragment.startActivity(bundle: Bundle = Bundle(), sharedElements: Pair<View, String>) {
+inline fun <reified T : Activity> Fragment.startActivity(sharedElements: Pair<View, String>, bundle: Bundle = Bundle(),
+                                                         flag: Int = Intent.FLAG_ACTIVITY_NEW_TASK) {
     this.activity?.also {
         val intent = Intent(this.context, T::class.java)
-        intent.putExtras(bundle)
+        intent.putExtras(bundle).addFlags(flag)
         val optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(it, sharedElements)
         ContextCompat.startActivity(this.context!!, intent, optionsCompat.toBundle())
     }
 }
 
-inline fun <reified T : Activity> Fragment.startActivityForResult(bundle: Bundle = Bundle(), resultCode: Int) {
+inline fun <reified T : Activity> Fragment.startActivityForResult(resultCode: Int, bundle: Bundle = Bundle(), flag: Int = Intent.FLAG_ACTIVITY_NEW_TASK) {
     this.context?.also {
         val intent = Intent(it, T::class.java)
-        intent.putExtras(bundle)
+        intent.putExtras(bundle).addFlags(flag)
         startActivityForResult(intent, resultCode)
     }
 }
 
 
-inline fun <reified T : Activity> Fragment.startActivityForResult(bundle: Bundle = Bundle(), resultCode: Int, sharedElements: Pair<View, String>) {
+inline fun <reified T : Activity> Fragment.startActivityForResult(resultCode: Int, sharedElements: Pair<View, String>,
+                                                                  bundle: Bundle = Bundle(), flag: Int = Intent.FLAG_ACTIVITY_NEW_TASK) {
     this.activity?.also {
         val intent = Intent(this.context, T::class.java)
-        intent.putExtras(bundle)
+        intent.putExtras(bundle).addFlags(flag)
         val optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(it, sharedElements)
         startActivityForResult(intent, resultCode, optionsCompat.toBundle())
+    }
+}
+
+inline fun FragmentManager.inTransaction(func: FragmentTransaction.() -> FragmentTransaction) {
+    beginTransaction().func().commit()
+}
+
+fun Fragment.addFragment(fragment: Fragment, frameId: Int, addToBackStack: Boolean = true) {
+    this.activity?.supportFragmentManager?.inTransaction {
+        val ft = add(frameId, fragment)
+        if (addToBackStack) ft.addToBackStack(fragment.tag)
+        ft
+    }
+}
+
+fun Fragment.replaceFragment(fragment: Fragment, frameId: Int, addToBackStack: Boolean = true) {
+    this.activity?.supportFragmentManager?.inTransaction {
+        val ft = replace(frameId, fragment)
+        if (addToBackStack) ft.addToBackStack(fragment.tag)
+        ft
+    }
+}
+
+fun Fragment.replaceFragment(fragment: Fragment, frameId: Int, vararg sharedElements: View, addToBackStack: Boolean = true) {
+    this.activity?.supportFragmentManager?.inTransaction {
+        val ft = replace(frameId, fragment)
+        if (addToBackStack) ft.addToBackStack(fragment.tag)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            for (view in sharedElements) {
+                ft.addSharedElement(view, view.transitionName)
+            }
+        }
+        ft
     }
 }
 /*------------------------------------Activity---------------------------------------------*/
@@ -200,24 +242,55 @@ inline fun <reified T : Any> Activity.extra(key: String, default: T? = null) = l
     if (value is T) value else default
 }
 
-inline fun <reified T : Activity> Activity.startActivity(bundle: Bundle = Bundle(), sharedElements: Pair<View, String>) {
+inline fun <reified T : Activity> Activity.startActivity(bundle: Bundle = Bundle(), sharedElements: Pair<View, String>,
+                                                         flag: Int = Intent.FLAG_ACTIVITY_NEW_TASK) {
     val intent = Intent(this, T::class.java)
-    intent.putExtras(bundle)
+    intent.putExtras(bundle).addFlags(flag)
     val optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(this, sharedElements)
     ContextCompat.startActivity(this, intent, optionsCompat.toBundle())
 }
 
-inline fun <reified T : Activity> Activity.startActivityForResult(bundle: Bundle = Bundle(), resultCode: Int) {
+inline fun <reified T : Activity> Activity.startActivityForResult(resultCode: Int, bundle: Bundle = Bundle(), flag: Int = Intent.FLAG_ACTIVITY_NEW_TASK) {
     val intent = Intent(this, T::class.java)
-    intent.putExtras(bundle)
+    intent.putExtras(bundle).addFlags(flag)
     startActivityForResult(intent, resultCode)
 }
 
 
-inline fun <reified T : Activity> Activity.startActivityForResult(bundle: Bundle = Bundle(), resultCode: Int, sharedElements: Pair<View, String>) {
+inline fun <reified T : Activity> Activity.startActivityForResult(resultCode: Int, sharedElements: Pair<View, String>, bundle: Bundle = Bundle(),
+                                                                  flag: Int = Intent.FLAG_ACTIVITY_NEW_TASK) {
     val intent = Intent(this, T::class.java)
-    intent.putExtras(bundle)
+    intent.putExtras(bundle).addFlags(flag)
     val optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(this, sharedElements)
     startActivityForResult(intent, resultCode, optionsCompat.toBundle())
+}
+
+fun AppCompatActivity.addFragment(fragment: Fragment, frameId: Int, addToBackStack: Boolean = true) {
+    supportFragmentManager.inTransaction {
+        val ft = add(frameId, fragment)
+        if (addToBackStack) ft.addToBackStack(fragment.tag)
+        ft
+    }
+}
+
+fun AppCompatActivity.replaceFragment(fragment: Fragment, frameId: Int, addToBackStack: Boolean = true) {
+    supportFragmentManager.inTransaction {
+        val ft = replace(frameId, fragment)
+        if (addToBackStack) ft.addToBackStack(fragment.tag)
+        ft
+    }
+}
+
+fun AppCompatActivity.replaceFragment(fragment: Fragment, frameId: Int, vararg sharedElements: View, addToBackStack: Boolean = true) {
+    supportFragmentManager.inTransaction {
+        val ft = replace(frameId, fragment)
+        if (addToBackStack) ft.addToBackStack(fragment.tag)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            for (view in sharedElements) {
+                ft.addSharedElement(view, view.transitionName)
+            }
+        }
+        ft
+    }
 }
 
