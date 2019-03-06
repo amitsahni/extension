@@ -1,6 +1,7 @@
 package example.extension
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -51,6 +52,10 @@ class MainActivity : AppCompatActivity() {
         Log.i(localClassName, "AbcModule().components.context = ${abcModule.init()}")
         "Hello".printInfo()
         "Hello".printError()
+        startActivity<SecondActivity> {
+            putExtras(Bundle())
+        }
+        startActivity<SecondActivity>()
 //        resColor(R.color.notification_icon_bg_color)
 //        val intent = intent<MainActivity>()
 //        val int = intent<MainActivity> {
@@ -88,31 +93,36 @@ class MainActivity : AppCompatActivity() {
 //        linearLayout.forEach {
 //            it.context
 //        }
-        btn.backgroundTint(R.color.error_color_material_dark)
+        btn.backgroundTint = R.color.error_color_material_dark
         btn.disable()
+        btn.resString = R.string.abc_action_bar_home_description
+        btn.setTextSize = 10f
+        btn.textColor = R.color.notification_icon_bg_color
         val str = ""
         str.isEmptyOrNull {
 
         }
-        image.foregroundTint(R.color.error_color_material_dark)
-
-        btn1.backgroundTint(R.color.highlighted_text_material_light)
+        //image.foregroundTint(R.color.error_color_material_dark)
+        image.foregroundTint = R.color.error_color_material_dark
+        image.drawable.tint = resColor(R.color.error_color_material_dark)
+        // btn1.backgroundTint(R.color.highlighted_text_material_light)
+        btn.backgroundTint = R.color.highlighted_text_material_light
         btn1.click {
             btn.enable()
             btn.toggleVisibility()
             // btn.toUpperCase()
-            btn.textSize(20f)
+            btn.setTextSize = 20f
             createImageFile("abc.jpg")
             createImageFile("abc.text")
             val file = getImageFile("abc.jpg")
             val a = "10"
             println(file?.toString())
-            println(now())
+            println(now)
             println(currentUTC)
             println(currentUTC("dd-MM-yyyy", Locale.ENGLISH))
-            println(now().toUTC)
+            println(now.toUTC)
             val milli = 1451005003353
-            println(milli.toUTC())
+            println(milli.toUTC)
             startActivity<SecondActivity>()
         }
         val a = "10"

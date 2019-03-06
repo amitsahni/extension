@@ -7,7 +7,6 @@ import android.content.Intent
 import android.content.Intent.*
 import android.net.Uri
 import android.os.Build
-import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.support.annotation.*
@@ -58,18 +57,27 @@ inline fun <reified T : Activity> Context.intent(body: Intent.() -> Unit): Inten
     return intent
 }
 
-inline fun <reified T : Activity> Context.startActivity(bundle: Bundle = Bundle(), flag: Int = Intent.FLAG_ACTIVITY_NEW_TASK) {
+inline fun <reified T : Activity> Context.startActivity() {
     val intent = Intent(this, T::class.java)
-    intent.putExtras(bundle)
-    intent.addFlags(flag)
-    ContextCompat.startActivity(this, intent, Bundle())
+    ContextCompat.startActivity(this, intent, null)
 }
 
-inline fun <reified T : Activity> Context.startActivity(enterResId: Int = 0, exitResId: Int = 0,
-                                                        bundle: Bundle = Bundle(), flag: Int = Intent.FLAG_ACTIVITY_NEW_TASK) {
+inline fun <reified T : Activity> Context.startActivity(body: Intent.() -> Unit) {
     val intent = Intent(this, T::class.java)
-    intent.putExtras(bundle)
-    intent.addFlags(flag)
+    intent.body()
+    ContextCompat.startActivity(this, intent, null)
+}
+
+inline fun <reified T : Activity> Context.startActivity(@AnimRes enterResId: Int = 0, @AnimRes exitResId: Int = 0) {
+    val intent = Intent(this, T::class.java)
+    val optionsCompat = ActivityOptionsCompat.makeCustomAnimation(this, enterResId, exitResId)
+    ContextCompat.startActivity(this, intent, optionsCompat.toBundle())
+}
+
+inline fun <reified T : Activity> Context.startActivity(@AnimRes enterResId: Int = 0, @AnimRes exitResId: Int = 0,
+                                                        body: Intent.() -> Unit) {
+    val intent = Intent(this, T::class.java)
+    intent.body()
     val optionsCompat = ActivityOptionsCompat.makeCustomAnimation(this, enterResId, exitResId)
     ContextCompat.startActivity(this, intent, optionsCompat.toBundle())
 }
@@ -163,30 +171,50 @@ inline fun <reified T : Any> Fragment.extra(key: String, default: T? = null) = l
     if (value is T) value else default
 }
 
-inline fun <reified T : Activity> Fragment.startActivity(sharedElements: Pair<View, String>, bundle: Bundle = Bundle(),
-                                                         flag: Int = Intent.FLAG_ACTIVITY_NEW_TASK) {
+inline fun <reified T : Activity> Fragment.startActivity(sharedElements: Pair<View, String>) {
     this.activity?.also {
-        val intent = Intent(this.context, T::class.java)
-        intent.putExtras(bundle).addFlags(flag)
+        val intent = Intent(it, T::class.java)
         val optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(it, sharedElements)
-        ContextCompat.startActivity(this.context!!, intent, optionsCompat.toBundle())
+        ContextCompat.startActivity(it, intent, optionsCompat.toBundle())
     }
 }
 
-inline fun <reified T : Activity> Fragment.startActivityForResult(resultCode: Int, bundle: Bundle = Bundle(), flag: Int = Intent.FLAG_ACTIVITY_NEW_TASK) {
-    this.context?.also {
+inline fun <reified T : Activity> Fragment.startActivity(body: Intent.() -> Unit, sharedElements: Pair<View, String>) {
+    this.activity?.also {
         val intent = Intent(it, T::class.java)
-        intent.putExtras(bundle).addFlags(flag)
+        intent.body()
+        val optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(it, sharedElements)
+        ContextCompat.startActivity(it, intent, optionsCompat.toBundle())
+    }
+}
+
+inline fun <reified T : Activity> Fragment.startActivityForResult(resultCode: Int) {
+    this.activity?.also {
+        val intent = Intent(it, T::class.java)
         startActivityForResult(intent, resultCode)
     }
 }
 
-
-inline fun <reified T : Activity> Fragment.startActivityForResult(resultCode: Int, sharedElements: Pair<View, String>,
-                                                                  bundle: Bundle = Bundle(), flag: Int = Intent.FLAG_ACTIVITY_NEW_TASK) {
+inline fun <reified T : Activity> Fragment.startActivityForResult(resultCode: Int, body: Intent.() -> Unit) {
     this.activity?.also {
-        val intent = Intent(this.context, T::class.java)
-        intent.putExtras(bundle).addFlags(flag)
+        val intent = Intent(it, T::class.java)
+        intent.body()
+        startActivityForResult(intent, resultCode)
+    }
+}
+
+inline fun <reified T : Activity> Fragment.startActivityForResult(resultCode: Int, sharedElements: Pair<View, String>) {
+    this.activity?.also {
+        val intent = Intent(it, T::class.java)
+        val optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(it, sharedElements)
+        startActivityForResult(intent, resultCode, optionsCompat.toBundle())
+    }
+}
+
+inline fun <reified T : Activity> Fragment.startActivityForResult(resultCode: Int, sharedElements: Pair<View, String>, body: Intent.() -> Unit) {
+    this.activity?.also {
+        val intent = Intent(it, T::class.java)
+        intent.body()
         val optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(it, sharedElements)
         startActivityForResult(intent, resultCode, optionsCompat.toBundle())
     }
@@ -196,33 +224,20 @@ inline fun FragmentManager.inTransaction(func: FragmentTransaction.() -> Fragmen
     beginTransaction().func().commit()
 }
 
-fun Fragment.addFragment(fragment: Fragment, frameId: Int, addToBackStack: Boolean = true) {
-    this.activity?.supportFragmentManager?.inTransaction {
-        val ft = add(frameId, fragment)
-        if (addToBackStack) ft.addToBackStack(fragment.tag)
-        ft
+fun Fragment.getFragment(frameId: Int = -1): Fragment? {
+    var containerId = frameId
+    if (containerId != -1) {
+        containerId = id
     }
+    return this.activity?.supportFragmentManager?.findFragmentById(containerId)
 }
 
-fun Fragment.replaceFragment(fragment: Fragment, frameId: Int, addToBackStack: Boolean = true) {
-    this.activity?.supportFragmentManager?.inTransaction {
-        val ft = replace(frameId, fragment)
-        if (addToBackStack) ft.addToBackStack(fragment.tag)
-        ft
+fun Fragment.getFragment(tag: String? = ""): Fragment? {
+    var value = this.tag
+    tag.isEmptyOrNull {
+        value = this
     }
-}
-
-fun Fragment.replaceFragment(fragment: Fragment, frameId: Int, vararg sharedElements: View, addToBackStack: Boolean = true) {
-    this.activity?.supportFragmentManager?.inTransaction {
-        val ft = replace(frameId, fragment)
-        if (addToBackStack) ft.addToBackStack(fragment.tag)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            for (view in sharedElements) {
-                ft.addSharedElement(view, view.transitionName)
-            }
-        }
-        ft
-    }
+    return this.activity?.supportFragmentManager?.findFragmentByTag(value)
 }
 /*------------------------------------Activity---------------------------------------------*/
 
@@ -242,31 +257,45 @@ inline fun <reified T : Any> Activity.extra(key: String, default: T? = null) = l
     if (value is T) value else default
 }
 
-inline fun <reified T : Activity> Activity.startActivity(bundle: Bundle = Bundle(), sharedElements: Pair<View, String>,
-                                                         flag: Int = Intent.FLAG_ACTIVITY_NEW_TASK) {
+inline fun <reified T : Activity> Activity.startActivity(sharedElements: Pair<View, String>) {
     val intent = Intent(this, T::class.java)
-    intent.putExtras(bundle).addFlags(flag)
     val optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(this, sharedElements)
     ContextCompat.startActivity(this, intent, optionsCompat.toBundle())
 }
 
-inline fun <reified T : Activity> Activity.startActivityForResult(resultCode: Int, bundle: Bundle = Bundle(), flag: Int = Intent.FLAG_ACTIVITY_NEW_TASK) {
+inline fun <reified T : Activity> Activity.startActivity(body: Intent.() -> Unit, sharedElements: Pair<View, String>) {
     val intent = Intent(this, T::class.java)
-    intent.putExtras(bundle).addFlags(flag)
+    intent.body()
+    val optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(this, sharedElements)
+    ContextCompat.startActivity(this, intent, optionsCompat.toBundle())
+}
+
+inline fun <reified T : Activity> Activity.startActivityForResult(resultCode: Int) {
+    val intent = Intent(this, T::class.java)
     startActivityForResult(intent, resultCode)
 }
 
-
-inline fun <reified T : Activity> Activity.startActivityForResult(resultCode: Int, sharedElements: Pair<View, String>, bundle: Bundle = Bundle(),
-                                                                  flag: Int = Intent.FLAG_ACTIVITY_NEW_TASK) {
+inline fun <reified T : Activity> Activity.startActivityForResult(resultCode: Int, body: Intent.() -> Unit) {
     val intent = Intent(this, T::class.java)
-    intent.putExtras(bundle).addFlags(flag)
+    intent.body()
+    startActivityForResult(intent, resultCode)
+}
+
+inline fun <reified T : Activity> Activity.startActivityForResult(resultCode: Int, sharedElements: Pair<View, String>) {
+    val intent = Intent(this, T::class.java)
+    val optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(this, sharedElements)
+    startActivityForResult(intent, resultCode, optionsCompat.toBundle())
+}
+
+inline fun <reified T : Activity> Activity.startActivityForResult(resultCode: Int, sharedElements: Pair<View, String>, body: Intent.() -> Unit) {
+    val intent = Intent(this, T::class.java)
+    intent.body()
     val optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(this, sharedElements)
     startActivityForResult(intent, resultCode, optionsCompat.toBundle())
 }
 
 fun AppCompatActivity.addFragment(fragment: Fragment, frameId: Int, addToBackStack: Boolean = true) {
-    supportFragmentManager.inTransaction {
+    supportFragmentManager?.inTransaction {
         val ft = add(frameId, fragment)
         if (addToBackStack) ft.addToBackStack(fragment.tag)
         ft
@@ -274,7 +303,7 @@ fun AppCompatActivity.addFragment(fragment: Fragment, frameId: Int, addToBackSta
 }
 
 fun AppCompatActivity.replaceFragment(fragment: Fragment, frameId: Int, addToBackStack: Boolean = true) {
-    supportFragmentManager.inTransaction {
+    supportFragmentManager?.inTransaction {
         val ft = replace(frameId, fragment)
         if (addToBackStack) ft.addToBackStack(fragment.tag)
         ft
@@ -282,7 +311,7 @@ fun AppCompatActivity.replaceFragment(fragment: Fragment, frameId: Int, addToBac
 }
 
 fun AppCompatActivity.replaceFragment(fragment: Fragment, frameId: Int, vararg sharedElements: View, addToBackStack: Boolean = true) {
-    supportFragmentManager.inTransaction {
+    supportFragmentManager?.inTransaction {
         val ft = replace(frameId, fragment)
         if (addToBackStack) ft.addToBackStack(fragment.tag)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -293,4 +322,15 @@ fun AppCompatActivity.replaceFragment(fragment: Fragment, frameId: Int, vararg s
         ft
     }
 }
+
+fun AppCompatActivity.popFragment(frameId: Int) {
+    supportFragmentManager?.inTransaction {
+        val fragment = supportFragmentManager.findFragmentById(frameId)
+        fragment?.also {
+            remove(it)
+        }
+        this
+    }
+}
+
 

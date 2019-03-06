@@ -30,9 +30,11 @@ fun String.toCamelCase(): String {
     return titleText.trim { it <= ' ' }
 }
 
-fun String.isEmptyOrNull(string: String.() -> Unit) {
-    if (!isNullOrBlank()) {
-        string()
+fun String?.isEmptyOrNull(string: String.() -> Unit) {
+    this?.let {
+        if (!it.isEmpty()) {
+            string()
+        }
     }
 }
 
@@ -59,7 +61,7 @@ fun Any.toJson(): String = try {
     ""
 }
 
-inline fun <reified T : Any> String.fromJson() = G.gson.fromJson<T>(this, T::class.java)
+inline fun <reified T : Any> String?.fromJson() = G.gson.fromJson<T>(this, T::class.java)
 
 fun String.toEditable(): Editable = Editable.Factory.getInstance().newEditable(this)
 
