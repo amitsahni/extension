@@ -5,18 +5,24 @@ apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
 ext {
-    bintrayRepo = 'extension' // your repo name
-    bintrayName = 'extension-utils' // has to be same as your library module name
-    publishedGroupId = 'extension' // your module package name
-    libraryName = 'extension-utils'
-    artifact = 'extension-utils' // has to be same as your library module name
-    libraryDescription = 'A set of methods used to manipulate time object'
+    bintrayRepo = 'maven'
+    bintrayName = 'extension'
+
+    publishedGroupId = 'com.extension'
+    libraryName = 'extension'
+    artifact = 'extension'
+
+    libraryDescription = 'This view is a container that supports diagonal scroll and fling gesture. It is based on AOSP HorizontalScrollView.'
+
     siteUrl = 'https://github.com/amitsahni/extension'
     gitUrl = 'https://github.com/amitsahni/extension.git'
-    libraryVersion = '0.0.1-alpha'
-    developerId = 'amit'
-    developerName = 'Amit'
+
+    libraryVersion = '0.0.1'
+
+    developerId = 'amitsahni'
+    developerName = 'Amit Singh'
     developerEmail = 'sahni1987@gmail.com'
+
     licenseName = 'The Apache Software License, Version 2.0'
     licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
     allLicenses = ["Apache-2.0"]
