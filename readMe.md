@@ -1,4 +1,4 @@
-[ ![Download](https://api.bintray.com/packages/amitsahni/Library/com.extension/images/download.svg) ](https://bintray.com/amitsahni/Library/com.extension/_latestVersion)
+[ ![Download](https://api.bintray.com/packages/amitsahni/Library/extension/images/download.svg) ](https://bintray.com/amitsahni/Library/extension/_latestVersion)
 
 ```groovy
 repositories {
