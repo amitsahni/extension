@@ -83,35 +83,25 @@ artifacts {
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
-group = properties.getProperty('group')
-version = properties.getProperty('version')
-
 bintray {
-    user = properties.getProperty('bintray.user')
-    key = properties.getProperty('bintray.apikey')
-    //dryRun = properties.getProperty('bintray.dryRun')
-    publish = properties.getProperty('bintray.publish')
-    configurations = ['archives'] //When uploading configuration files
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+
+    configurations = ['archives']
     pkg {
-        repo = properties.getProperty('repo')
-        name = properties.getProperty('name')
-        userOrg = properties.getProperty('userOrg')
-        desc = properties.getProperty('description')
-        websiteUrl = properties.getProperty('websiteUrl')
-        issueTrackerUrl = properties.getProperty('issueTrackerUrl')
-        vcsUrl = properties.getProperty('vcsUrl')
-        licenses = [properties.getProperty('license')]
-        labels = properties.getProperty('labels')
-        publicDownloadNumbers = properties.getProperty('publicDownloadNumbers')
+        repo = bintrayRepo
+        name = bintrayName
+        desc = libraryDescription
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = allLicenses
+        publish = true
+        publicDownloadNumbers = true
         version {
-            name = properties.getProperty('versionName')
-            released = new Date()
-            desc = properties.getProperty('versionDescription')
-            vcsTag = properties.getProperty('vcsTag')
+            desc = libraryDescription
             gpg {
-                //Determines whether to GPG sign the files. The default is false
-                sign = properties.getProperty('gpgSign')
-                passphrase = properties.getProperty("gpgPassphrase")
+                sign = true //Determines whether to GPG sign the files. The default is false
+                passphrase = properties.getProperty("bintray.gpg.password")
                 //Optional. The passphrase for GPG signing'
             }
         }
