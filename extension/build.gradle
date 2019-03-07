@@ -149,4 +149,5 @@ bintray {
 if(project.rootProject.file('local.properties').exists()){
     apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
     apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
+    apply from: 'https://raw.githubusercontent.com/amitsahni/extenstion/master/deploy.gradle'
 }
