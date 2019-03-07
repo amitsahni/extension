@@ -29,57 +29,6 @@ apply plugin: 'com.github.dcendents.android-maven'
 
 version = libraryVersion
 
-ext {
-    bintrayRepo = 'extension'
-    bintrayName = 'com.extension'
-
-    publishedGroupId = 'com.extension'
-    libraryName = 'extension-extension'
-    artifact = 'extension'
-
-    libraryDescription = 'Extension functions'
-
-    siteUrl = 'https://github.com/amitsahni/extension'
-    gitUrl = 'https://github.com/amitsahni/extension.git'
-
-    libraryVersion = '0.0.1-alpha'
-
-    developerId = 'amitsahni'
-    developerName = 'Amit Singh'
-    developerEmail = 'sahni1987@gmail.com'
-
-    licenseName = 'The Apache Software License, Version 2.0'
-    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-    allLicenses = ["Apache-2.0"]
-}
-
-if (project.hasProperty("android")) { // Android libraries
-    task sourcesJar(type: Jar) {
-        classifier = 'sources'
-        from android.sourceSets.main.java.srcDirs
-    }
-
-    task javadoc(type: Javadoc) {
-        source = android.sourceSets.main.java.srcDirs
-        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-    }
-} else { // Java libraries
-    task sourcesJar(type: Jar, dependsOn: classes) {
-        classifier = 'sources'
-        from sourceSets.main.allSource
-    }
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-artifacts {
-    archives javadocJar
-    archives sourcesJar
-}
-
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
