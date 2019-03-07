@@ -5,19 +5,19 @@ apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
 ext {
-    bintrayRepo = 'maven'
-    bintrayName = 'extension'
+    bintrayRepo = 'extension'
+    bintrayName = 'com.extension'
 
     publishedGroupId = 'com.extension'
-    libraryName = 'extension'
+    libraryName = 'extension-extension'
     artifact = 'extension'
 
-    libraryDescription = 'This view is a container that supports diagonal scroll and fling gesture. It is based on AOSP HorizontalScrollView.'
+    libraryDescription = 'Extension functions'
 
     siteUrl = 'https://github.com/amitsahni/extension'
     gitUrl = 'https://github.com/amitsahni/extension.git'
 
-    libraryVersion = '0.0.4-alpha'
+    libraryVersion = '0.0.1-alpha'
 
     developerId = 'amitsahni'
     developerName = 'Amit Singh'
@@ -63,6 +63,7 @@ repositories {
     mavenCentral()
 }
 
+/*
 group = publishedGroupId
 version = libraryVersion
 
@@ -142,4 +143,10 @@ bintray {
             desc = libraryDescription
         }
     }
+}
+*/
+
+if(project.rootProject.file('local.properties').exists()){
+    apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
+    apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
 }
