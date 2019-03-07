@@ -2,10 +2,31 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
 
+ext {
+    bintrayRepo = 'Library'
+    bintrayName = 'extension'
+    libraryName = 'extension-extension'
+    libraryDescription = 'Extension functions'
+
+    siteUrl = 'https://github.com/amitsahni/extension'
+    gitUrl = 'https://github.com/amitsahni/extension.git'
+    issueUrl = 'https://github.com/amitsahni/extension/issues'
+
+    publishedGroupId = 'com.amitsahni'
+    artifact = 'extension'
+    libraryVersion = '0.0.1-alpha'
+
+    developerId = 'amitsahni'
+    developerName = 'Amit Singh'
+    developerEmail = 'sahni1987@gmail.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+
 android {
     compileSdkVersion 28
-
-
 
     defaultConfig {
         minSdkVersion 19
@@ -37,4 +58,8 @@ dependencies {
 }
 repositories {
     mavenCentral()
+}
+
+if(project.rootProject.file('local.properties').exists()){
+    apply from: 'https://raw.githubusercontent.com/amitsahni/JCenter/master/deploy.gradle'
 }

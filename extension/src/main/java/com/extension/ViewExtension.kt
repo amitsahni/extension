@@ -3,8 +3,7 @@ package com.extension
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
-import android.support.annotation.ColorRes
-import android.support.v4.content.ContextCompat
+import android.support.annotation.*
 import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.AppCompatImageView
@@ -50,7 +49,12 @@ fun View.toggleVisibility() {
 /**
  * Extension method to provide simpler access to {@link View#getResources()#getString(int)}.
  */
-fun View.resString(stringResId: Int): String = this.context?.resString(stringResId).orEmpty()
+var View.resString: Int
+    @StringRes get() = resString
+    set(value) {
+        this.context?.resString(value).orEmpty()
+    }
+
 
 /**
  * Extension method to show a keyboard for View.
@@ -92,55 +96,76 @@ inline fun <T : View> T.afterMeasured(crossinline f: T.() -> Unit) {
 /**
  * Extension method to set View's start padding.
  */
-fun View.setPaddingStart(value: Int) = setPaddingRelative(value, paddingTop, paddingEnd, paddingBottom)
+var View.setPaddingStart: Int
+    @DimenRes get() = setPaddingStart
+    set(value) {
+        setPaddingRelative(value, paddingTop, paddingEnd, paddingBottom)
+    }
 
 /**
  * Extension method to set View's end padding.
  */
-fun View.setPaddingEnd(value: Int) = setPaddingRelative(paddingStart, paddingTop, value, paddingBottom)
-
+var View.setPaddingEnd: Int
+    @DimenRes get() = setPaddingEnd
+    set(value) {
+        setPaddingRelative(paddingStart, paddingTop, value, paddingBottom)
+    }
 /**
  * Extension method to set View's top padding.
  */
-fun View.setPaddingTop(value: Int) = setPaddingRelative(paddingStart, value, paddingEnd, paddingBottom)
-
+var View.setPaddingTop: Int
+    @DimenRes get() = setPaddingTop
+    set(value) {
+        setPaddingRelative(paddingStart, value, paddingEnd, paddingBottom)
+    }
 /**
  * Extension method to set View's bottom padding.
  */
-fun View.setPaddingBottom(value: Int) = setPaddingRelative(paddingStart, paddingTop, paddingEnd, value)
-
+var View.setPaddingBottom: Int
+    @DimenRes get() = setPaddingBottom
+    set(value) {
+        setPaddingRelative(paddingStart, paddingTop, paddingEnd, value)
+    }
 /**
  * Extension method to set View's horizontal padding.
  */
-fun View.setPaddingHorizontal(value: Int) = setPaddingRelative(value, paddingTop, value, paddingBottom)
-
+var View.setPaddingHorizontal: Int
+    @DimenRes get() = setPaddingHorizontal
+    set(value) {
+        setPaddingRelative(value, paddingTop, value, paddingBottom)
+    }
 /**
  * Extension method to set View's vertical padding.
  */
-fun View.setPaddingVertical(value: Int) = setPaddingRelative(paddingStart, value, paddingEnd, value)
-
+var View.setPaddingVertical: Int
+    @DimenRes get() = setPaddingVertical
+    set(value) {
+        setPaddingRelative(paddingStart, value, paddingEnd, value)
+    }
 /**
  * Extension method to set View's height.
  */
-fun View.setHeight(value: Int) {
-    val lp = layoutParams
-    lp?.let {
-        lp.height = value
-        layoutParams = lp
+var View.setHeight: Int
+    @DimenRes get() = setHeight
+    set(value) {
+        val lp = layoutParams
+        lp?.let {
+            lp.height = value
+            layoutParams = lp
+        }
     }
-}
-
 /**
  * Extension method to set View's width.
  */
-fun View.setWidth(value: Int) {
-    val lp = layoutParams
-    lp?.let {
-        lp.width = value
-        layoutParams = lp
+var View.setWidth: Int
+    @DimenRes get() = setWidth
+    set(value) {
+        val lp = layoutParams
+        lp?.let {
+            lp.height = value
+            layoutParams = lp
+        }
     }
-}
-
 /**
  * Extension method to resize View with height & width.
  */
@@ -175,23 +200,24 @@ fun View.enable() {
     alpha = 1.0f
 }
 
-fun View.backgroundTint(@ColorRes resId: Int) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        if (background != null) {
-            backgroundTintList = context.resColorStateList(resId)
+var View.backgroundTint: Int
+    @ColorInt get() = backgroundTint
+    set(value) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (background != null) {
+                backgroundTintList = context.resColorStateList(value)
+            } else {
+                setBackgroundColor(context.resColor(value))
+            }
         } else {
-            setBackgroundColor(context.resColor(resId))
-        }
-    } else {
-        if (background != null) {
-            DrawableCompat.setTintList(background, context.resColorStateList(resId))
-        } else {
-            setBackgroundColor(context.resColor(resId))
-        }
+            if (background != null) {
+                DrawableCompat.setTintList(background, context.resColorStateList(value))
+            } else {
+                setBackgroundColor(context.resColor(value))
+            }
 
+        }
     }
-}
-
 
 /*------------------------------------ViewGroup-----------------------------------------------*/
 
@@ -206,16 +232,21 @@ inline fun ViewGroup.forEach(action: (View) -> Unit) {
 /**
  * Extension method to set a drawable to the start of a TextView.
  */
-fun TextView.setDrawableStart(drawable: Int) {
-    setCompoundDrawablesRelativeWithIntrinsicBounds(drawable, 0, 0, 0)
-}
+var TextView.drawableStart: Int
+    @DrawableRes get() = drawableStart
+    set(value) {
+        setCompoundDrawablesRelativeWithIntrinsicBounds(value, 0, 0, 0)
+    }
+
 
 /**
  * Extension method to set a drawable to the ens of a TextView.
  */
-fun TextView.setDrawableEnd(drawable: Int) {
-    setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, drawable, 0)
-}
+var TextView.drawableEnd: Int
+    @DrawableRes get() = drawableEnd
+    set(value) {
+        setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, value, 0)
+    }
 
 
 fun TextView.toUpperCase() {
@@ -226,32 +257,40 @@ fun TextView.toLowerCase() {
     text = value.toLowerCase()
 }
 
-fun TextView.textSize(px: Float) {
-    val scaledDensity = resources.displayMetrics.scaledDensity
-    val sp = (px / scaledDensity)
-    setTextSize(TypedValue.COMPLEX_UNIT_SP, sp)
-}
+var TextView.setTextSize: Float
+    get() = setTextSize
+    set(value) {
+        setTextSize(TypedValue.COMPLEX_UNIT_PX, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, value, resources.displayMetrics))
+    }
 
 val TextView.value
     get() = text.toString()
 
 
-@SuppressLint("RestrictedApi")
-fun TextView.backgroundTint(@ColorRes resId: Int) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        if (background != null) {
-            backgroundTintList = context.resColorStateList(resId)
+var TextView.backgroundTint: Int
+    @ColorInt get() = backgroundTint
+    @SuppressLint("RestrictedApi")
+    set(value) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (background != null) {
+                backgroundTintList = context.resColorStateList(value)
+            } else {
+                setBackgroundColor(context.resColor(value))
+            }
         } else {
-            setBackgroundColor(context.resColor(resId))
-        }
-    } else {
-        if (background != null) {
-            (this as AppCompatTextView).supportBackgroundTintList = context.resColorStateList(resId)
-        } else {
-            setBackgroundColor(context.resColor(resId))
-        }
+            if (background != null) {
+                (this as AppCompatTextView).supportBackgroundTintList = context.resColorStateList(value)
+            } else {
+                setBackgroundColor(context.resColor(value))
+            }
 
+        }
     }
+
+var TextView.textColor: Int
+    @ColorRes get() = textColor
+    set(value) {
+        this.setTextColor(this.context.resColor(value))
 }
 
 /*------------------------------------EditText-----------------------------------------------*/
@@ -300,19 +339,22 @@ inline fun EditText.beforeTextChanged(crossinline beforeTextChanged: (CharSequen
 }
 /*------------------------------------ImageView-----------------------------------------------*/
 
-@SuppressLint("RestrictedApi")
-fun ImageView.foregroundTint(@ColorRes resId: Int) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        this.imageTintList = context.resColorStateList(resId)
-    } else {
-        (this as AppCompatImageView).supportImageTintList = context.resColorStateList(resId)
-
+var ImageView.foregroundTint: Int
+    @ColorRes get() = foregroundTint
+    @SuppressLint("RestrictedApi")
+    set(value) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            this.imageTintList = context.resColorStateList(value)
+        } else {
+            (this as AppCompatImageView).supportImageTintList = context.resColorStateList(value)
+        }
     }
-}
 
 /*------------------------------------SwipeRefreshLayout-----------------------------------------------*/
 
-fun SwipeRefreshLayout.backgroundColor(@ColorRes resId: Int) {
-    setProgressBackgroundColorSchemeColor(this.context.resColor(resId))
-}
+var SwipeRefreshLayout.backgroundColor: Int
+    @ColorRes get() = backgroundColor
+    set(value) {
+        setProgressBackgroundColorSchemeColor(this.context.resColor(value))
+    }
 

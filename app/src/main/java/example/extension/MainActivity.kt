@@ -1,24 +1,57 @@
 package example.extension
 
-import android.support.v7.app.AppCompatActivity
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.TextView
+import com.activity.Builder
 import com.extension.*
 import kotlinx.android.synthetic.main.activity_main.*
+import org.koin.android.ext.android.inject
+import org.koin.android.scope.ext.android.bindScope
+import org.koin.android.scope.ext.android.getOrCreateScope
+import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
 
     private val id1 by extra("Hello", "fg")
+    val service: Builder by inject()
+    val context: Context by inject()
+    val httpModule: HttpModule by inject("http")
+    val httpModule2: HttpModule by inject("factory")
+    val viewModels by viewModel<AppViewModel>()
+    val abcModule by inject<AbcModule>()
+    val components: Components by lazy {
+        Components()
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        bindScope(getOrCreateScope("mainActivity"))
+
         setContentView(R.layout.activity_main)
         Log.i(localClassName, "ids = $id1")
+        Log.i(localClassName, "context = ${context}")
+        Log.i(localClassName, "builder = ${service}")
+        Log.i(localClassName, "httpModule = ${httpModule}")
+        Log.i(localClassName, "httpModule = ${httpModule}")
+        Log.i(localClassName, "httpModule.Context = ${httpModule.init()}")
+        Log.i(localClassName, "httpModule2 = ${httpModule2}")
+        Log.i(localClassName, "httpModule2 = ${httpModule2}")
+        Log.i(localClassName, "httpModule2.Context = ${httpModule2.init()}")
+
+        Log.i(localClassName, "viewModels = $viewModels")
+        Log.i(localClassName, "viewModels.init = ${viewModels.init()}")
+
+        Log.i(localClassName, "components.context = ${components.context}")
+        Log.i(localClassName, "components.service = ${components.service}")
+        Log.i(localClassName, "AbcModule().components.context = ${abcModule.init()}")
+        "Hello".printInfo()
+        "Hello".printError()
 //        resColor(R.color.notification_icon_bg_color)
 //        val intent = intent<MainActivity>()
 //        val int = intent<MainActivity> {
@@ -56,32 +89,37 @@ class MainActivity : AppCompatActivity() {
 //        linearLayout.forEach {
 //            it.context
 //        }
-        btn.backgroundTint(R.color.error_color_material_dark)
+        btn.backgroundTint = R.color.error_color_material_dark
         btn.disable()
+        btn.resString = R.string.abc_action_bar_home_description
+        btn.setTextSize = 10f
+        btn.textColor = R.color.notification_icon_bg_color
         val str = ""
         str.isEmptyOrNull {
 
         }
-        image.foregroundTint(R.color.error_color_material_dark)
-
-        btn1.backgroundTint(R.color.highlighted_text_material_light)
+        //image.foregroundTint(R.color.error_color_material_dark)
+        image.foregroundTint = R.color.error_color_material_dark
+        image.drawable.tint = resColor(R.color.error_color_material_dark)
+        // btn1.backgroundTint(R.color.highlighted_text_material_light)
+        btn.backgroundTint = R.color.highlighted_text_material_light
         btn1.click {
             btn.enable()
             btn.toggleVisibility()
-            btn.toUpperCase()
-            btn.textSize(10f)
+            // btn.toUpperCase()
+            btn.setTextSize = 20f
             createImageFile("abc.jpg")
             createImageFile("abc.text")
             val file = getImageFile("abc.jpg")
             val a = "10"
             println(file?.toString())
-            println(now())
+            println(now)
             println(currentUTC)
             println(currentUTC("dd-MM-yyyy", Locale.ENGLISH))
-            println(now().toUTC)
+            println(now.toUTC)
             val milli = 1451005003353
-            println(milli.toUTC())
-
+            println(milli.toUTC)
+            startActivity<SecondActivity>()
         }
         val a = "10"
         a.toJson()

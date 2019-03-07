@@ -1,7 +1,5 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
 
 android {
@@ -21,6 +19,11 @@ android {
         }
     }
 }
+repositories {
+    maven {
+        url  "https://dl.bintray.com/amitsahni/Library"
+    }
+}
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
@@ -29,5 +32,15 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    implementation 'com.github.amitsahni:manager:1.0.6'
+    implementation 'com.github.amitsahni:http:1.0.7.7-alpha'
     implementation project(':extension')
+    // Koin for Android
+    implementation 'org.koin:koin-android:1.0.2'
+    // or Koin for Lifecycle scoping
+    implementation 'org.koin:koin-android-scope:1.0.2'
+    // or Koin for Android Architecture ViewModel
+    implementation 'org.koin:koin-android-viewmodel:1.0.2'
+//    implementation 'com.amitsahni:extension:0.0.1-alpha'
+
 }
