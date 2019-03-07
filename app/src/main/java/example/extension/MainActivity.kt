@@ -52,10 +52,6 @@ class MainActivity : AppCompatActivity() {
         Log.i(localClassName, "AbcModule().components.context = ${abcModule.init()}")
         "Hello".printInfo()
         "Hello".printError()
-        startActivity<SecondActivity> {
-            putExtras(Bundle())
-        }
-        startActivity<SecondActivity>()
 //        resColor(R.color.notification_icon_bg_color)
 //        val intent = intent<MainActivity>()
 //        val int = intent<MainActivity> {

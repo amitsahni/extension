@@ -4,7 +4,7 @@ apply plugin: 'kotlin-android'
 
 ext {
     bintrayRepo = 'Library'
-    bintrayName = 'com.extension'
+    bintrayName = 'extension'
     libraryName = 'extension-extension'
     libraryDescription = 'Extension functions'
 
