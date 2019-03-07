@@ -3,19 +3,18 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
 
 ext {
-    bintrayRepo = 'extension'
+    bintrayRepo = 'Library'
     bintrayName = 'com.extension'
-
-    publishedGroupId = 'com.extension'
     libraryName = 'extension-extension'
-    artifact = 'extension'
-
     libraryDescription = 'Extension functions'
 
     siteUrl = 'https://github.com/amitsahni/extension'
     gitUrl = 'https://github.com/amitsahni/extension.git'
+    issueUrl = 'https://github.com/amitsahni/extension/issues'
 
-    libraryVersion = '0.0.1'
+    publishedGroupId = 'com.amitsahni'
+    artifact = 'extension'
+    libraryVersion = '0.0.1-alpha'
 
     developerId = 'amitsahni'
     developerName = 'Amit Singh'
@@ -62,8 +61,8 @@ repositories {
 }
 
 if(project.rootProject.file('local.properties').exists()){
-    apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
-    apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
-//    apply from: 'https://raw.githubusercontent.com/amitsahni/extension/feature/koin/deploy.gradle'
+//    apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
+//    apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
+    apply from: 'https://raw.githubusercontent.com/amitsahni/JCenter/master/deploy.gradle'
    // apply from: 'https://raw.githubusercontent.com/JoaquimLey/jcenter-config/master/deploy.gradle'
 }
