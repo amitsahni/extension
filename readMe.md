@@ -1,6 +1,6 @@
 [ ![Download](https://api.bintray.com/packages/amitsahni/Library/extension/images/download.svg) ](https://bintray.com/amitsahni/Library/extension/_latestVersion)
 
-```groovy
+```
 repositories {
     maven {
         url  "https://dl.bintray.com/amitsahni/Library" 
@@ -8,6 +8,10 @@ repositories {
 }
 ```
 
-```groovy
+```
 implementation 'com.amitsahni:extension:0.0.1-alpha'
 ```
+
+#### Calendar Extension
+
+[Link] (https://github.com/amitsahni/extension/blob/dev/extension/src/main/java/com/extension/CalenderExtension.kt)
