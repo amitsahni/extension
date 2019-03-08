@@ -12,3 +12,6 @@ repositories {
 implementation 'com.amitsahni:extension:0.0.1-alpha'
 ```
 ### [Calendar Extension](https://github.com/amitsahni/extension/blob/dev/extension/src/main/java/com/extension/CalenderExtension.kt)
+
+
+### [Collection Extension](https://github.com/amitsahni/extension/blob/dev/extension/src/main/java/com/extension/CollectionExtension.kt)
