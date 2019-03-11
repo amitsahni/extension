@@ -1,8 +1,8 @@
 package example.extension
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import com.activity.Builder
@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
     val components: Components by lazy {
         Components()
     }
-
+    val builder: AlertDialog.Builder by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +52,21 @@ class MainActivity : AppCompatActivity() {
         Log.i(localClassName, "AbcModule().components.context = ${abcModule.init()}")
         "Hello".printInfo()
         "Hello".printError()
+        val builder = AlertDialog.Builder(this)
+                .setTitle("adf")
+                .setMessage("Adfadsf")
+                .setCancelable(true)
+                .create()
+//        builder.singleChoice("Hello") {
+//
+//        }
+//        builder.doubleChoice("ok", "Cancel") {
+//            if (it == AlertDialog.BUTTON_POSITIVE) {
+//                "Ok".printInfo()
+//            } else {
+//                "Cancel".printError()
+//            }
+//        }
 //        resColor(R.color.notification_icon_bg_color)
 //        val intent = intent<MainActivity>()
 //        val int = intent<MainActivity> {
@@ -104,6 +119,10 @@ class MainActivity : AppCompatActivity() {
         // btn1.backgroundTint(R.color.highlighted_text_material_light)
         btn.backgroundTint = R.color.highlighted_text_material_light
         btn1.click {
+            toast("ok")
+            btn.snackBar("Hello", "Ok") {
+                snackBar("Ok")
+            }
             btn.enable()
             btn.toggleVisibility()
             // btn.toUpperCase()
@@ -119,7 +138,7 @@ class MainActivity : AppCompatActivity() {
             println(now.toUTC)
             val milli = 1451005003353
             println(milli.toUTC)
-            startActivity<SecondActivity>()
+            //startActivity<SecondActivity>()
         }
         val a = "10"
         a.toJson()
