@@ -64,6 +64,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         image.load(url)
+        url.isJson.printInfo()
         val builder = AlertDialog.Builder(this)
                 .setTitle("adf")
                 .setMessage("Adfadsf")

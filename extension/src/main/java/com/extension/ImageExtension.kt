@@ -3,6 +3,7 @@ package com.extension
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
+import android.os.AsyncTask
 import android.os.Build
 import android.support.annotation.ColorRes
 import android.support.annotation.DrawableRes
@@ -10,6 +11,8 @@ import android.support.v7.widget.AppCompatImageView
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.Transformation
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
@@ -44,10 +47,51 @@ fun ImageView.load(image: String, @DrawableRes placeHolder: Int = -1) {
 }
 
 @SuppressLint("CheckResult")
+fun ImageView.loadSkipCache(image: String, @DrawableRes placeHolder: Int = -1) {
+    val requestOptions = RequestOptions()
+    requestOptions.placeholder(placeHolder)
+    requestOptions.error(placeHolder)
+    requestOptions.skipMemoryCache(true)
+    requestOptions.diskCacheStrategy(DiskCacheStrategy.NONE)
+    Glide.with(context.applicationContext)
+            .asBitmap()
+            .load(image)
+            .apply(requestOptions)
+            .into(this)
+}
+
+@SuppressLint("CheckResult")
 fun ImageView.load(image: String, @DrawableRes placeHolder: Int = -1, f: Bitmap?.() -> Unit) {
     val requestOptions = RequestOptions()
     requestOptions.placeholder(placeHolder)
     requestOptions.error(placeHolder)
+    Glide.with(context.applicationContext)
+            .asBitmap()
+            .load(image)
+            .apply(requestOptions)
+            .listener(object : RequestListener<Bitmap> {
+                override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Bitmap>?, isFirstResource: Boolean): Boolean {
+                    f(null)
+                    return false
+                }
+
+                override fun onResourceReady(resource: Bitmap?, model: Any?, target: Target<Bitmap>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                    f(resource)
+                    return true
+                }
+
+            })
+            .into(this)
+}
+
+@SuppressLint("CheckResult")
+fun ImageView.load(image: String, @DrawableRes placeHolder: Int = -1, transformations: Transformation<Bitmap>?, f: Bitmap?.() -> Unit) {
+    val requestOptions = RequestOptions()
+    requestOptions.placeholder(placeHolder)
+    requestOptions.error(placeHolder)
+    transformations?.also {
+        requestOptions.transform(it)
+    }
     Glide.with(context.applicationContext)
             .asBitmap()
             .load(image)
@@ -109,4 +153,15 @@ fun Context.downloadFile(image: String, resizeHeight: Int = 405, resizeWidth: In
                 override fun onResourceReady(resource: File, transition: Transition<in File>?) {
                 }
             })
+}
+
+fun Context.clearImageCache() {
+    val glide = Glide.get(this)
+    glide.clearMemory()
+    object : AsyncTask<Void, Void, Void>() {
+        override fun doInBackground(vararg voids: Void): Void? {
+            glide.clearDiskCache()
+            return null
+        }
+    }.execute()
 }

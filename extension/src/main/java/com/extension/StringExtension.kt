@@ -3,6 +3,8 @@ package com.extension
 import android.text.Editable
 import android.util.Patterns
 import com.google.gson.GsonBuilder
+import org.json.JSONArray
+import org.json.JSONObject
 
 
 object G {
@@ -66,5 +68,24 @@ inline fun <reified T : Any> String?.fromJson() = G.gson.fromJson<T>(this, T::cl
 fun String.toEditable(): Editable = Editable.Factory.getInstance().newEditable(this)
 
 fun Int.times(predicate: (Int) -> Unit) = repeat(this, predicate)
+
+val String.isJson: Boolean
+    get() {
+        this.trim { it <= ' ' }
+        if (this.startsWith("{")) {
+            val jsonObject = JSONObject(this)
+            val message = jsonObject.toString(2)
+            return true
+        }
+        if (this.startsWith("[")) {
+            val jsonArray = JSONArray(this)
+            val message = jsonArray.toString(2)
+            return true
+        }
+        return false
+    }
+
+
+
 
 

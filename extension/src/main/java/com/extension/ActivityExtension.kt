@@ -4,9 +4,11 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.provider.MediaStore
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.FileProvider
 import android.support.v4.util.Pair
 import android.support.v7.app.AppCompatActivity
 import android.view.View
@@ -105,4 +107,21 @@ fun AppCompatActivity.popFragment(frameId: Int) {
         }
         this
     }
+}
+
+fun Activity.gallery(requestCode: Int) {
+    val intent = Intent()
+    intent.type = "image/*"
+    intent.action = Intent.ACTION_GET_CONTENT
+    startActivityForResult(intent, requestCode)
+}
+
+fun Activity.camera(requestCode: Int) {
+    val intent = Intent(
+            android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
+    val imagePath = createImageFile("camera.png")
+    val mUri = FileProvider.getUriForFile(this, packageName, imagePath)
+    intent.putExtra(MediaStore.EXTRA_OUTPUT, mUri)
+    intent.putExtra("return-data", true)
+    startActivityForResult(intent, requestCode)
 }

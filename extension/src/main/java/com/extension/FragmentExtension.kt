@@ -12,24 +12,24 @@ import com.extension.*
 
 /*------------------------------------Fragment---------------------------------------------*/
 
-fun Fragment.resColor(@ColorRes colorRes: Int) = this.context!!.resColor(colorRes)
+fun Fragment.resColor(@ColorRes colorRes: Int) = this.context?.resColor(colorRes)
 
-fun Fragment.resString(@StringRes stringRes: Int) = this.context!!.resString(stringRes).orEmpty()
+fun Fragment.resString(@StringRes stringRes: Int) = this.context?.resString(stringRes).orEmpty()
 
 fun Fragment.resString(@StringRes stringRes: Int, vararg formatArgs: Any?) =
-        this.context!!.resString(stringRes, formatArgs).orEmpty()
+        this.context?.resString(stringRes, formatArgs)
 
-fun Fragment.resDrawable(@DrawableRes drawableRes: Int) = this.context!!.resDrawable(drawableRes)
+fun Fragment.resDrawable(@DrawableRes drawableRes: Int) = this.context?.resDrawable(drawableRes)
 
-fun Fragment.resDimenPx(@DimenRes dimenRes: Int) = this.context!!.resDimenPx(dimenRes).or(-1)
+fun Fragment.resDimenPx(@DimenRes dimenRes: Int) = this.context?.resDimenPx(dimenRes)
 
-fun Fragment.resInt(@IntegerRes intRes: Int) = this.context!!.resInt(intRes).or(-1)
+fun Fragment.resInt(@IntegerRes intRes: Int) = this.context?.resInt(intRes)
 
-fun Fragment.resBoolean(@BoolRes boolRes: Int) = this.context!!.resBoolean(boolRes).or(false)
+fun Fragment.resBoolean(@BoolRes boolRes: Int) = this.context?.resBoolean(boolRes)
 
-fun Fragment.resIntArray(@ArrayRes intArrRes: Int) = this.context!!.resIntArray(intArrRes)
+fun Fragment.resIntArray(@ArrayRes intArrRes: Int) = this.context?.resIntArray(intArrRes)
 
-fun Fragment.resStrArray(@ArrayRes strArrRes: Int) = this.context!!.resStrArray(strArrRes).orEmpty()
+fun Fragment.resStrArray(@ArrayRes strArrRes: Int) = this.context?.resStrArray(strArrRes)
 
 fun Fragment.hideSoftKeyboard() {
     activity?.hideSoftKeyboard()
