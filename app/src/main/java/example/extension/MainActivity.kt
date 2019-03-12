@@ -1,6 +1,7 @@
 package example.extension
 
 import android.content.Context
+import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
@@ -28,6 +29,7 @@ class MainActivity : AppCompatActivity() {
         Components()
     }
     val builder: AlertDialog.Builder by inject()
+    private val url = "https://res.cloudinary.com/clickapp/image/upload/v1547194652/Test/1.png"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +54,16 @@ class MainActivity : AppCompatActivity() {
         Log.i(localClassName, "AbcModule().components.context = ${abcModule.init()}")
         "Hello".printInfo()
         "Hello".printError()
+        context.downloadFile(url) {
+            this?.path?.printInfo()
+            image.setImageURI(Uri.fromFile(this))
+        }
+        context.downloadBitmap(url) {
+            this?.let {
+                image.setImageBitmap(this)
+            }
+        }
+        image.load(url)
         val builder = AlertDialog.Builder(this)
                 .setTitle("adf")
                 .setMessage("Adfadsf")
@@ -114,8 +126,8 @@ class MainActivity : AppCompatActivity() {
 
         }
         //image.foregroundTint(R.color.error_color_material_dark)
-        image.foregroundTint = R.color.error_color_material_dark
-        image.drawable.tint = resColor(R.color.error_color_material_dark)
+//        image.foregroundTint = R.color.error_color_material_dark
+//        image.drawable.tint = resColor(R.color.error_color_material_dark)
         // btn1.backgroundTint(R.color.highlighted_text_material_light)
         btn.backgroundTint = R.color.highlighted_text_material_light
         btn1.click {

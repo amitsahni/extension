@@ -13,3 +13,9 @@ fun String.printError() {
         Log.e(this.javaClass.simpleName, this)
     }
 }
+
+fun String.printWarn() {
+    if (BuildConfig.DEBUG) {
+        Log.w(this.javaClass.simpleName, this)
+    }
+}

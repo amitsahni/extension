@@ -337,18 +337,6 @@ inline fun EditText.beforeTextChanged(crossinline beforeTextChanged: (CharSequen
         }
     })
 }
-/*------------------------------------ImageView-----------------------------------------------*/
-
-var ImageView.foregroundTint: Int
-    @ColorRes get() = foregroundTint
-    @SuppressLint("RestrictedApi")
-    set(value) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            this.imageTintList = context.resColorStateList(value)
-        } else {
-            (this as AppCompatImageView).supportImageTintList = context.resColorStateList(value)
-        }
-    }
 
 /*------------------------------------SwipeRefreshLayout-----------------------------------------------*/
 
