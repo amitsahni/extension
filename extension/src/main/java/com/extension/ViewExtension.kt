@@ -4,19 +4,19 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
 import android.support.annotation.*
+import android.support.design.widget.BottomNavigationView
 import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.widget.AppCompatImageView
 import android.support.v7.widget.AppCompatTextView
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.TypedValue
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import android.widget.ImageView
 import android.widget.TextView
 
 
@@ -182,13 +182,16 @@ fun View.resize(width: Int, height: Int) {
  * Set an onclick listener
  */
 @Suppress("UNCHECKED_CAST")
-fun <T : View> T.click(block: (T) -> Unit) = setOnClickListener { block(it as T) }
+fun <T : View> T.click(block: T.() -> Unit) = setOnClickListener { block(it as T) }
 
 /**
  * Extension method to set OnLongClickListener on a view.
  */
 @Suppress("UNCHECKED_CAST")
-fun <T : View> T.longClick(block: (T) -> Boolean) = setOnLongClickListener { block(it as T) }
+fun <T : View> T.longClick(block: T.() -> Unit) = setOnLongClickListener {
+    block(it as T)
+    true
+}
 
 fun View.disable() {
     isEnabled = false
@@ -346,3 +349,19 @@ var SwipeRefreshLayout.backgroundColor: Int
         setProgressBackgroundColorSchemeColor(this.context.resColor(value))
     }
 
+/*------------------------------------BottomNavigationView-----------------------------------------------*/
+
+fun BottomNavigationView.getSelectedItem(): Int {
+    for (i in 0 until menu.size()) {
+        if (menu.getItem(i).isChecked) {
+            return i
+        }
+    }
+    return 0
+}
+
+fun BottomNavigationView.itemSelect(f: MenuItem.() -> Boolean) {
+    setOnNavigationItemSelectedListener {
+        f(it)
+    }
+}

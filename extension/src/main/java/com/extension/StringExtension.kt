@@ -21,6 +21,10 @@ fun String.asInt(): Int = toInt().or(-1)
 
 fun String.asBoolean(): Boolean = toBoolean().or(false)
 
+val Int.isNegative get() = this < 0
+
+val Boolean.intValue get() = if (this) 1 else 0
+
 fun String.toCamelCase(): String {
     var titleText = ""
     if (!this.isEmpty()) {
@@ -40,19 +44,16 @@ fun String?.isEmptyOrNull(string: String.() -> Unit) {
     }
 }
 
-/**
- * Extension method to check if String is Number.
- */
-fun String.isNumeric(): Boolean = matches("^[0-9]+$".toRegex())
+val String.containsLetters get() = matches(".*[a-zA-Z].*".toRegex())
 
-/**
- * Extension method to check if String is Email.
- */
+val String.containsNumbers get() = matches(".*[0-9].*".toRegex())
+
+val String.isAlphanumeric get() = matches("^[a-zA-Z0-9]*$".toRegex())
+
+val String.isAlphabetic get() = matches("^[a-zA-Z]*$".toRegex())
+
 fun String.isEmail(): Boolean = Patterns.EMAIL_ADDRESS.matcher(this).matches()
 
-/**
- * Extension method to check if String is Email.
- */
 fun String.isUrl(): Boolean = Patterns.WEB_URL.matcher(this).matches()
 
 fun join(vararg params: Any?) = params.joinToString()
@@ -84,8 +85,6 @@ val String.isJson: Boolean
         }
         return false
     }
-
-
 
 
 

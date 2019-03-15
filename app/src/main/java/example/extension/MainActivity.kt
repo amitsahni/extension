@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import com.activity.Builder
 import com.extension.*
+import com.extension.P.defaultPrefs
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.inject
 import org.koin.android.scope.ext.android.bindScope
@@ -117,15 +118,25 @@ class MainActivity : AppCompatActivity() {
 //        linearLayout.forEach {
 //            it.context
 //        }
+        val prefs = defaultPrefs(context)
+        prefs.printInfo()
+        val prefs1 = defaultPrefs(context)
+        prefs1.printInfo()
+        val prefs2 = defaultPrefs(context)
+        prefs2.printInfo()
+        prefs["asdf"] = "Hello"
+        val d = prefs["asdf","jhkj"]
+        d.printInfo()
         btn.backgroundTint = R.color.error_color_material_dark
         btn.disable()
         btn.resString = R.string.abc_action_bar_home_description
         btn.setTextSize = 10f
         btn.textColor = R.color.notification_icon_bg_color
-        val str = ""
+        val str = null
         str.isEmptyOrNull {
 
         }
+        val name  = str ?: "dfasdf"
         //image.foregroundTint(R.color.error_color_material_dark)
 //        image.foregroundTint = R.color.error_color_material_dark
 //        image.drawable.tint = resColor(R.color.error_color_material_dark)
@@ -153,6 +164,9 @@ class MainActivity : AppCompatActivity() {
             println(milli.toUTC)
             //startActivity<SecondActivity>()
         }
+        btn1.longClick {
+
+        }
         val a = "10"
         a.toJson()
         a.fromJson<String>()
@@ -165,3 +179,6 @@ class MainActivity : AppCompatActivity() {
 
     }
 }
+
+
+
