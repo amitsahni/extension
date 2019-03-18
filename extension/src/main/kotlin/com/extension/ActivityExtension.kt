@@ -6,14 +6,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.provider.MediaStore
-import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.FileProvider
 import android.support.v4.util.Pair
 import android.support.v7.app.AppCompatActivity
-import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import inTransaction
