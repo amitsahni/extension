@@ -1,3 +1,4 @@
+@file:JvmName("DialogUtils")
 package com.extension
 
 import android.app.Dialog

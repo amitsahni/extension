@@ -1,3 +1,4 @@
+@file:JvmName("ActivityUtils")
 package com.extension
 
 import android.app.Activity

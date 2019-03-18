@@ -1,3 +1,4 @@
+@file:JvmName("ImageUtils")
 package com.extension
 
 import android.annotation.SuppressLint

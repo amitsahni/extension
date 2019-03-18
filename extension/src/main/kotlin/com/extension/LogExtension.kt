@@ -1,3 +1,4 @@
+@file:JvmName("LogUtils")
 package com.extension
 
 import android.util.Log

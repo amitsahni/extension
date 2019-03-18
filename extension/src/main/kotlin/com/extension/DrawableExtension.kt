@@ -1,3 +1,4 @@
+@file:JvmName("DrawableUtils")
 package com.extension
 
 import android.graphics.drawable.Drawable

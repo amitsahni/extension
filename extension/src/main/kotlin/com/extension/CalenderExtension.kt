@@ -1,3 +1,4 @@
+@file:JvmName("DateUtils")
 package com.extension
 
 import java.text.DateFormat

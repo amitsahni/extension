@@ -1,3 +1,4 @@
+@file:JvmName("FragmentUtils")
 import android.app.Activity
 import android.content.Intent
 import android.support.annotation.*

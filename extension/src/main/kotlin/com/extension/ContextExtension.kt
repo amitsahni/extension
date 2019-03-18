@@ -1,3 +1,4 @@
+@file:JvmName("ContextUtils")
 package com.extension
 
 import android.app.Activity

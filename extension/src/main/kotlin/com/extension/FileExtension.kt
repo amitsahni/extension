@@ -1,3 +1,4 @@
+@file:JvmName("FileUtils")
 package com.extension
 
 import android.content.ContentUris

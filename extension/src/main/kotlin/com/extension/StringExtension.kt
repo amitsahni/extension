@@ -1,3 +1,4 @@
+@file:JvmName("StringUtils")
 package com.extension
 
 import android.text.Editable

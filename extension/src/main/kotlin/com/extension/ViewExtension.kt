@@ -1,3 +1,4 @@
+@file:JvmName("ViewUtils")
 package com.extension
 
 import android.annotation.SuppressLint

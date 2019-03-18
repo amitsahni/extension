@@ -1,3 +1,4 @@
+@file:JvmName("PrefUtils")
 package com.extension
 
 import android.content.Context
