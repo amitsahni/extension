@@ -5,6 +5,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.AppCompatButton
+import android.support.v7.widget.AppCompatTextView
 import android.util.Log
 import com.activity.Builder
 import com.extension.*
@@ -55,16 +57,16 @@ class MainActivity : AppCompatActivity() {
         Log.i(localClassName, "AbcModule().components.context = ${abcModule.init()}")
         "Hello".printInfo()
         "Hello".printError()
-        context.downloadFile(url) {
-            this?.path?.printInfo()
-            image.setImageURI(Uri.fromFile(this))
-        }
+//        context.downloadFile(url) {
+//            this?.path?.printInfo()
+//            image.setImageURI(Uri.fromFile(this))
+//        }
         context.downloadBitmap(url) {
             this?.let {
                 image.setImageBitmap(this)
             }
         }
-        image.load(url)
+//        image.load(url)
         url.isJson.printInfo()
         val builder = AlertDialog.Builder(this)
                 .setTitle("adf")
@@ -136,6 +138,7 @@ class MainActivity : AppCompatActivity() {
         str.isEmptyOrNull {
 
         }
+        text.backgroundTint = R.color.notification_icon_bg_color
         val name  = str ?: "dfasdf"
         //image.foregroundTint(R.color.error_color_material_dark)
 //        image.foregroundTint = R.color.error_color_material_dark

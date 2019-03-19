@@ -124,10 +124,9 @@ private fun getDataColumn(
 private fun Context.getRealPathBelowAPI11(contentUri: Uri): String {
     val proj = arrayOf(MediaStore.Images.Media.DATA)
     val cursor = contentResolver.query(contentUri, proj, null, null, null)
-    var index = 0
     var result = ""
     if (cursor != null) {
-        index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+        val index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
         cursor.moveToFirst()
         result = cursor.getString(index)
         cursor.close()

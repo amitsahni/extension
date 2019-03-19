@@ -75,13 +75,9 @@ val String.isJson: Boolean
     get() {
         this.trim { it <= ' ' }
         if (this.startsWith("{")) {
-            val jsonObject = JSONObject(this)
-            val message = jsonObject.toString(2)
             return true
         }
         if (this.startsWith("[")) {
-            val jsonArray = JSONArray(this)
-            val message = jsonArray.toString(2)
             return true
         }
         return false

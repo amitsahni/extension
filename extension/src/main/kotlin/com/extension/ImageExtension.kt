@@ -4,6 +4,7 @@ package com.extension
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.os.AsyncTask
 import android.os.Build
 import android.support.annotation.ColorRes
@@ -15,12 +16,15 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.Transformation
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.Request
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.target.SizeReadyCallback
 import com.bumptech.glide.request.target.Target
+import com.bumptech.glide.request.target.Target.SIZE_ORIGINAL
 import com.bumptech.glide.request.transition.Transition
 import java.io.File
+
 
 /*------------------------------------ImageView-----------------------------------------------*/
 
@@ -128,10 +132,7 @@ fun Context.downloadBitmap(image: String, resizeHeight: Int = 405, resizeWidth: 
                     return true
                 }
             })
-            .into(object : SimpleTarget<Bitmap>(resizeHeight, resizeWidth) {
-                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                }
-            })
+            .into(BaseTarget<Bitmap>())
 }
 
 @SuppressLint("CheckResult")
@@ -150,10 +151,7 @@ fun Context.downloadFile(image: String, resizeHeight: Int = 405, resizeWidth: In
                     return true
                 }
             })
-            .into(object : SimpleTarget<File>(resizeHeight, resizeWidth) {
-                override fun onResourceReady(resource: File, transition: Transition<in File>?) {
-                }
-            })
+            .into(BaseTarget<File>())
 }
 
 fun Context.clearImageCache() {
@@ -165,4 +163,43 @@ fun Context.clearImageCache() {
             return null
         }
     }.execute()
+}
+
+private class BaseTarget<T> : Target<T> {
+    override fun onResourceReady(resource: T, transition: Transition<in T>?) {
+    }
+
+    private var request: Request? = null
+    override fun onLoadStarted(placeholder: Drawable?) {
+    }
+
+    override fun onLoadFailed(errorDrawable: Drawable?) {
+    }
+
+    override fun getRequest(): Request? {
+        return request
+    }
+
+    override fun onStop() {
+    }
+
+    override fun setRequest(request: Request?) {
+        this.request = request
+    }
+
+    override fun onLoadCleared(placeholder: Drawable?) {
+    }
+
+    override fun onStart() {
+    }
+
+    override fun onDestroy() {
+    }
+
+    override fun getSize(cb: SizeReadyCallback) {
+        cb.onSizeReady(SIZE_ORIGINAL, SIZE_ORIGINAL)
+    }
+
+    override fun removeCallback(cb: SizeReadyCallback) {
+    }
 }

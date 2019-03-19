@@ -23,7 +23,7 @@ fun Dialog.customView(view: View, isCancelable: Boolean = true) {
 }
 
 fun AlertDialog.singleChoice(buttonText: String, f: () -> Unit) {
-    setButton(AlertDialog.BUTTON_POSITIVE, buttonText) { dialog, which ->
+    setButton(AlertDialog.BUTTON_POSITIVE, buttonText) { dialog, _ ->
         f()
         dialog.dismiss()
     }

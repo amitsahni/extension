@@ -8,7 +8,7 @@ import android.support.annotation.*
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.widget.AppCompatTextView
+import android.support.v7.widget.*
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.TypedValue
@@ -206,6 +206,7 @@ fun View.enable() {
 
 var View.backgroundTint: Int
     @ColorInt get() = backgroundTint
+    @SuppressLint("RestrictedApi")
     set(value) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             if (background != null) {
@@ -215,7 +216,17 @@ var View.backgroundTint: Int
             }
         } else {
             if (background != null) {
-                DrawableCompat.setTintList(background, context.resColorStateList(value))
+                when {
+                    this is AppCompatAutoCompleteTextView -> supportBackgroundTintList = context.resColorStateList(value)
+                    this is AppCompatTextView -> supportBackgroundTintList = context.resColorStateList(value)
+                    this is AppCompatButton -> supportBackgroundTintList = context.resColorStateList(value)
+                    this is AppCompatImageView -> supportBackgroundTintList = context.resColorStateList(value)
+                    this is AppCompatMultiAutoCompleteTextView -> supportBackgroundTintList = context.resColorStateList(value)
+                    this is AppCompatEditText -> supportBackgroundTintList = context.resColorStateList(value)
+                    this is AppCompatImageButton -> supportBackgroundTintList = context.resColorStateList(value)
+                    this is AppCompatSpinner -> supportBackgroundTintList = context.resColorStateList(value)
+                    else -> DrawableCompat.setTintList(background, context.resColorStateList(value))
+                }
             } else {
                 setBackgroundColor(context.resColor(value))
             }
@@ -270,26 +281,6 @@ var TextView.setTextSize: Float
 val TextView.value
     get() = text.toString()
 
-
-var TextView.backgroundTint: Int
-    @ColorInt get() = backgroundTint
-    @SuppressLint("RestrictedApi")
-    set(value) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            if (background != null) {
-                backgroundTintList = context.resColorStateList(value)
-            } else {
-                setBackgroundColor(context.resColor(value))
-            }
-        } else {
-            if (background != null) {
-                (this as AppCompatTextView).supportBackgroundTintList = context.resColorStateList(value)
-            } else {
-                setBackgroundColor(context.resColor(value))
-            }
-
-        }
-    }
 
 var TextView.textColor: Int
     @ColorRes get() = textColor
