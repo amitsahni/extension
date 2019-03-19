@@ -4,6 +4,7 @@ package com.extension
 import android.app.Dialog
 import android.content.Context
 import android.support.annotation.LayoutRes
+import android.support.annotation.StringRes
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
 import android.view.View
@@ -42,6 +43,12 @@ fun AlertDialog.doubleChoice(positiveButtonText: String, negativeButtonText: Str
     show()
 }
 
+fun AlertDialog.customView(view: View, f: View.() -> Unit) {
+    setView(view)
+    f(view)
+    show()
+}
+
 fun View.snackBar(message: String) {
     Snackbar.make(this, message, Snackbar.LENGTH_SHORT).show()
 }
@@ -53,6 +60,31 @@ fun View.snackBar(message: String, actionMessage: String, f: View.() -> Unit) {
             }.show()
 }
 
+fun View.longSnackBar(message: String) {
+    Snackbar.make(this, message, Snackbar.LENGTH_LONG).show()
+}
+
+fun View.longSnackBar(message: String, actionMessage: String, f: View.() -> Unit) {
+    Snackbar.make(this, message, Snackbar.LENGTH_LONG)
+            .setAction(actionMessage) {
+                f()
+            }.show()
+}
+
 fun Context.toast(message: String) {
     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 }
+
+fun Context.toast(@StringRes resId: Int) {
+    Toast.makeText(this, resId, Toast.LENGTH_SHORT).show()
+}
+
+fun Context.longToast(message: String) {
+    Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+}
+
+fun Context.longToast(@StringRes resId: Int) {
+    Toast.makeText(this, resId, Toast.LENGTH_LONG).show()
+}
+
+

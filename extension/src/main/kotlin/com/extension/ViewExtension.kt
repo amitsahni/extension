@@ -6,6 +6,7 @@ import android.content.Context
 import android.os.Build
 import android.support.annotation.*
 import android.support.design.widget.BottomNavigationView
+import android.support.design.widget.FloatingActionButton
 import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.*
@@ -343,7 +344,8 @@ var SwipeRefreshLayout.backgroundColor: Int
 
 /*------------------------------------BottomNavigationView-----------------------------------------------*/
 
-fun BottomNavigationView.getSelectedItem(): Int {
+val BottomNavigationView.selectedItem: Int
+    get() {
     for (i in 0 until menu.size()) {
         if (menu.getItem(i).isChecked) {
             return i
@@ -357,3 +359,26 @@ fun BottomNavigationView.itemSelect(f: MenuItem.() -> Boolean) {
         f(it)
     }
 }
+
+/**
+ * Adds an [RecyclerView.OnScrollListener] to show or hide the FloatingActionButton when the RecyclerView scrolls up
+ * or down respectively
+ */
+fun RecyclerView.bindFloatingActionButton(fab: FloatingActionButton) = this.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+        super.onScrolled(recyclerView, dx, dy)
+        if (dy > 0 && fab.isShown) {
+            fab.hide()
+        } else if (dy < 0 && !fab.isShown) {
+            fab.show()
+        }
+    }
+})
+
+fun <T : RecyclerView.ViewHolder> T.onClick(event: (position: Int, type: Int) -> Unit): T {
+    itemView.setOnClickListener {
+        event(adapterPosition, itemViewType)
+    }
+    return this
+}
+

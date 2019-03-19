@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.Intent.*
 import android.net.Uri
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.support.annotation.*
@@ -16,6 +17,76 @@ import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+
+/**
+ * Add the [Intent.FLAG_ACTIVITY_CLEAR_TASK] flag to the [Intent].
+ *
+ * @return the same intent with the flag applied.
+ */
+fun Intent.clearTask(): Intent = apply { addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK) }
+
+/**
+ * Add the [Intent.FLAG_ACTIVITY_CLEAR_TOP] flag to the [Intent].
+ *
+ * @return the same intent with the flag applied.
+ */
+fun Intent.clearTop(): Intent = apply { addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP) }
+
+/**
+ * Add the [Intent.FLAG_ACTIVITY_NEW_DOCUMENT] flag to the [Intent].
+ *
+ * @return the same intent with the flag applied.
+ */
+fun Intent.newDocument(): Intent = apply {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT)
+    } else {
+        @Suppress("DEPRECATION")
+        addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET)
+    }
+}
+
+/**
+ * Add the [Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS] flag to the [Intent].
+ *
+ * @return the same intent with the flag applied.
+ */
+fun Intent.excludeFromRecents(): Intent = apply { addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS) }
+
+/**
+ * Add the [Intent.FLAG_ACTIVITY_MULTIPLE_TASK] flag to the [Intent].
+ *
+ * @return the same intent with the flag applied.
+ */
+fun Intent.multipleTask(): Intent = apply { addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK) }
+
+/**
+ * Add the [Intent.FLAG_ACTIVITY_NEW_TASK] flag to the [Intent].
+ *
+ * @return the same intent with the flag applied.
+ */
+fun Intent.newTask(): Intent = apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) }
+
+/**
+ * Add the [Intent.FLAG_ACTIVITY_NO_ANIMATION] flag to the [Intent].
+ *
+ * @return the same intent with the flag applied.
+ */
+fun Intent.noAnimation(): Intent = apply { addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION) }
+
+/**
+ * Add the [Intent.FLAG_ACTIVITY_NO_HISTORY] flag to the [Intent].
+ *
+ * @return the same intent with the flag applied.
+ */
+fun Intent.noHistory(): Intent = apply { addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY) }
+
+/**
+ * Add the [Intent.FLAG_ACTIVITY_SINGLE_TOP] flag to the [Intent].
+ *
+ * @return the same intent with the flag applied.
+ */
+fun Intent.singleTop(): Intent = apply { addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP) }
 
 /*------------------------------------Context---------------------------------------------*/
 
@@ -114,7 +185,27 @@ fun Context.browse(url: String, newTask: Boolean = false): Boolean {
     }
 }
 
-fun Context.dial(tel: String?) = startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:$tel")))
+fun Context.makeCall(tel: String): Boolean {
+    return try {
+        startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:$tel")))
+        true
+    } catch (e: Exception) {
+        e.printStackTrace()
+        false
+    }
+}
+
+fun Context.sendSMS(number: String, text: String = ""): Boolean {
+    return try {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("sms:$number"))
+        intent.putExtra("sms_body", text)
+        startActivity(intent)
+        true
+    } catch (e: Exception) {
+        e.printStackTrace()
+        false
+    }
+}
 
 fun Context.rate(): Boolean =
     browse("market://details?id=$packageName") or browse("http://play.google.com/store/apps/details?id=$packageName")
@@ -134,6 +225,8 @@ fun Context.dpToPx(dp: Int): Float {
     val displayMetrics = this.resources.displayMetrics
     return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)).toFloat()
 }
+
+
 
 
 
