@@ -70,6 +70,15 @@ class MainActivity : AppCompatActivity() {
                 .setMessage("Adfadsf")
                 .setCancelable(true)
                 .create()
+        alert("d") {
+            setCancelable(true)
+            setPositiveButton("df") { _, _ ->
+
+            }
+            setNegativeButton("D") { _, _ ->
+
+            }.show()
+        }
 //        builder.singleChoice("Hello") {
 //
 //        }

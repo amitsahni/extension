@@ -4,8 +4,6 @@ package com.extension
 import android.text.Editable
 import android.util.Patterns
 import com.google.gson.GsonBuilder
-import org.json.JSONArray
-import org.json.JSONObject
 
 
 object G {

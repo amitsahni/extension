@@ -49,6 +49,14 @@ fun AlertDialog.customView(view: View, f: View.() -> Unit) {
     show()
 }
 
+fun Context.alert(title: String, message: String = "", f: AlertDialog.Builder.() -> Unit) {
+    val dialog = AlertDialog.Builder(this)
+    dialog.setTitle(title)
+    dialog.setMessage(message)
+    f(dialog)
+    dialog.show()
+}
+
 fun View.snackBar(message: String) {
     Snackbar.make(this, message, Snackbar.LENGTH_SHORT).show()
 }
