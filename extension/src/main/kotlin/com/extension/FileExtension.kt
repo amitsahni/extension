@@ -1,3 +1,4 @@
+@file:JvmName("FileUtils")
 package com.extension
 
 import android.content.ContentUris
@@ -81,11 +82,11 @@ fun Context.getVideoFile(name: String): File? {
 
 fun Context.getPath(uri: Uri): String? {
     if (Build.VERSION.SDK_INT < 11) {
-        return getRealPathFromURI_BelowAPI11(uri);
+        return getRealPathBelowAPI11(uri);
     } else if (Build.VERSION.SDK_INT < 19) {
-        return getRealPathFromURI_API11to18(uri);
+        return getRealPathAPI11to18(uri);
     } else {
-        return getRealPathFromURI_API19(uri)
+        return getRealPathAPI19(uri)
     }
 }
 
@@ -111,8 +112,8 @@ private fun getDataColumn(
     try {
         cursor = context.contentResolver.query(uri!!, projection, selection, selectionArgs, null)
         if (cursor != null && cursor.moveToFirst()) {
-            val column_index = cursor.getColumnIndexOrThrow(column)
-            return cursor.getString(column_index)
+            val index = cursor.getColumnIndexOrThrow(column)
+            return cursor.getString(index)
         }
     } finally {
         cursor?.close()
@@ -120,22 +121,21 @@ private fun getDataColumn(
     return null
 }
 
-private fun Context.getRealPathFromURI_BelowAPI11(contentUri: Uri): String {
+private fun Context.getRealPathBelowAPI11(contentUri: Uri): String {
     val proj = arrayOf(MediaStore.Images.Media.DATA)
     val cursor = contentResolver.query(contentUri, proj, null, null, null)
-    var column_index = 0
     var result = ""
     if (cursor != null) {
-        column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+        val index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
         cursor.moveToFirst()
-        result = cursor.getString(column_index)
+        result = cursor.getString(index)
         cursor.close()
         return result
     }
     return result
 }
 
-private fun Context.getRealPathFromURI_API11to18(contentUri: Uri): String? {
+private fun Context.getRealPathAPI11to18(contentUri: Uri): String? {
     val proj = arrayOf(MediaStore.Images.Media.DATA)
     var result: String? = null
 
@@ -143,15 +143,15 @@ private fun Context.getRealPathFromURI_API11to18(contentUri: Uri): String? {
     val cursor = cursorLoader.loadInBackground()
 
     cursor?.let {
-        val column_index = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+        val index = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
         it.moveToFirst()
-        result = it.getString(column_index)
+        result = it.getString(index)
         it.close()
     }
     return result
 }
 
-private fun Context.getRealPathFromURI_API19(uri: Uri): String? {
+private fun Context.getRealPathAPI19(uri: Uri): String? {
 
     val isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
 

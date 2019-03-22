@@ -1,12 +1,13 @@
 package example.extension
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import com.activity.Builder
 import com.extension.*
+import com.extension.P.defaultPrefs
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.inject
 import org.koin.android.scope.ext.android.bindScope
@@ -27,7 +28,8 @@ class MainActivity : AppCompatActivity() {
     val components: Components by lazy {
         Components()
     }
-
+    val builder: AlertDialog.Builder by inject()
+    private val url = "https://res.cloudinary.com/clickapp/image/upload/v1547194652/Test/1.png"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +54,36 @@ class MainActivity : AppCompatActivity() {
         Log.i(localClassName, "AbcModule().components.context = ${abcModule.init()}")
         "Hello".printInfo()
         "Hello".printError()
+//        context.downloadFile(url) {
+//            this?.path?.printInfo()
+//            image.setImageURI(Uri.fromFile(this))
+//        }
+        context.downloadBitmap(url) {
+            this?.let {
+                image.setImageBitmap(this)
+            }
+        }
+//        image.load(url)
+        url.isJson.printInfo()
+        alert("Title") {
+            setCancelable(true)
+            setPositiveButton("df") { _, _ ->
+
+            }
+            setNegativeButton("D") { _, _ ->
+
+            }.show()
+        }
+//        builder.singleChoice("Hello") {
+//
+//        }
+//        builder.doubleChoice("ok", "Cancel") {
+//            if (it == AlertDialog.BUTTON_POSITIVE) {
+//                "Ok".printInfo()
+//            } else {
+//                "Cancel".printError()
+//            }
+//        }
 //        resColor(R.color.notification_icon_bg_color)
 //        val intent = intent<MainActivity>()
 //        val int = intent<MainActivity> {
@@ -89,21 +121,36 @@ class MainActivity : AppCompatActivity() {
 //        linearLayout.forEach {
 //            it.context
 //        }
+        val prefs = defaultPrefs(context)
+        prefs.printInfo()
+        val prefs1 = defaultPrefs(context)
+        prefs1.printInfo()
+        val prefs2 = defaultPrefs(context)
+        prefs2.printInfo()
+        prefs["asdf"] = "Hello"
+        val d = prefs["asdf","jhkj"]
+        d.printInfo()
         btn.backgroundTint = R.color.error_color_material_dark
         btn.disable()
         btn.resString = R.string.abc_action_bar_home_description
         btn.setTextSize = 10f
         btn.textColor = R.color.notification_icon_bg_color
-        val str = ""
+        val str = null
         str.isEmptyOrNull {
 
         }
+        text.backgroundTint = R.color.notification_icon_bg_color
+        val name  = str ?: "dfasdf"
         //image.foregroundTint(R.color.error_color_material_dark)
-        image.foregroundTint = R.color.error_color_material_dark
-        image.drawable.tint = resColor(R.color.error_color_material_dark)
+//        image.foregroundTint = R.color.error_color_material_dark
+//        image.drawable.tint = resColor(R.color.error_color_material_dark)
         // btn1.backgroundTint(R.color.highlighted_text_material_light)
         btn.backgroundTint = R.color.highlighted_text_material_light
         btn1.click {
+            toast("ok")
+            btn.snackBar("Hello", "Ok") {
+                snackBar("Ok")
+            }
             btn.enable()
             btn.toggleVisibility()
             // btn.toUpperCase()
@@ -111,7 +158,6 @@ class MainActivity : AppCompatActivity() {
             createImageFile("abc.jpg")
             createImageFile("abc.text")
             val file = getImageFile("abc.jpg")
-            val a = "10"
             println(file?.toString())
             println(now)
             println(currentUTC)
@@ -119,7 +165,10 @@ class MainActivity : AppCompatActivity() {
             println(now.toUTC)
             val milli = 1451005003353
             println(milli.toUTC)
-            startActivity<SecondActivity>()
+            //startActivity<SecondActivity>()
+        }
+        btn1.longClick {
+
         }
         val a = "10"
         a.toJson()
@@ -133,3 +182,6 @@ class MainActivity : AppCompatActivity() {
 
     }
 }
+
+
+

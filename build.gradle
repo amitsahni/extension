@@ -5,7 +5,9 @@ buildscript {
     repositories {
         google()
         jcenter()
-        
+        maven {
+            url 'https://maven.fabric.io/public'
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.3.2'
@@ -14,6 +16,8 @@ buildscript {
         // in the individual module build.gradle files
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7'
+        // Add dependency
+        classpath 'io.fabric.tools:gradle:1.27.1'
     }
 }
 
@@ -36,3 +40,4 @@ subprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+

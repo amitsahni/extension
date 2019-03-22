@@ -1,22 +1,24 @@
+@file:JvmName("ViewUtils")
 package com.extension
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
 import android.support.annotation.*
+import android.support.design.widget.BottomNavigationView
+import android.support.design.widget.FloatingActionButton
 import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.widget.AppCompatImageView
-import android.support.v7.widget.AppCompatTextView
+import android.support.v7.widget.*
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.TypedValue
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import android.widget.ImageView
 import android.widget.TextView
 
 
@@ -182,13 +184,16 @@ fun View.resize(width: Int, height: Int) {
  * Set an onclick listener
  */
 @Suppress("UNCHECKED_CAST")
-fun <T : View> T.click(block: (T) -> Unit) = setOnClickListener { block(it as T) }
+fun <T : View> T.click(block: T.() -> Unit) = setOnClickListener { block(it as T) }
 
 /**
  * Extension method to set OnLongClickListener on a view.
  */
 @Suppress("UNCHECKED_CAST")
-fun <T : View> T.longClick(block: (T) -> Boolean) = setOnLongClickListener { block(it as T) }
+fun <T : View> T.longClick(block: T.() -> Unit) = setOnLongClickListener {
+    block(it as T)
+    true
+}
 
 fun View.disable() {
     isEnabled = false
@@ -202,6 +207,7 @@ fun View.enable() {
 
 var View.backgroundTint: Int
     @ColorInt get() = backgroundTint
+    @SuppressLint("RestrictedApi")
     set(value) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             if (background != null) {
@@ -211,7 +217,17 @@ var View.backgroundTint: Int
             }
         } else {
             if (background != null) {
-                DrawableCompat.setTintList(background, context.resColorStateList(value))
+                when {
+                    this is AppCompatAutoCompleteTextView -> supportBackgroundTintList = context.resColorStateList(value)
+                    this is AppCompatTextView -> supportBackgroundTintList = context.resColorStateList(value)
+                    this is AppCompatButton -> supportBackgroundTintList = context.resColorStateList(value)
+                    this is AppCompatImageView -> supportBackgroundTintList = context.resColorStateList(value)
+                    this is AppCompatMultiAutoCompleteTextView -> supportBackgroundTintList = context.resColorStateList(value)
+                    this is AppCompatEditText -> supportBackgroundTintList = context.resColorStateList(value)
+                    this is AppCompatImageButton -> supportBackgroundTintList = context.resColorStateList(value)
+                    this is AppCompatSpinner -> supportBackgroundTintList = context.resColorStateList(value)
+                    else -> DrawableCompat.setTintList(background, context.resColorStateList(value))
+                }
             } else {
                 setBackgroundColor(context.resColor(value))
             }
@@ -267,26 +283,6 @@ val TextView.value
     get() = text.toString()
 
 
-var TextView.backgroundTint: Int
-    @ColorInt get() = backgroundTint
-    @SuppressLint("RestrictedApi")
-    set(value) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            if (background != null) {
-                backgroundTintList = context.resColorStateList(value)
-            } else {
-                setBackgroundColor(context.resColor(value))
-            }
-        } else {
-            if (background != null) {
-                (this as AppCompatTextView).supportBackgroundTintList = context.resColorStateList(value)
-            } else {
-                setBackgroundColor(context.resColor(value))
-            }
-
-        }
-    }
-
 var TextView.textColor: Int
     @ColorRes get() = textColor
     set(value) {
@@ -337,18 +333,6 @@ inline fun EditText.beforeTextChanged(crossinline beforeTextChanged: (CharSequen
         }
     })
 }
-/*------------------------------------ImageView-----------------------------------------------*/
-
-var ImageView.foregroundTint: Int
-    @ColorRes get() = foregroundTint
-    @SuppressLint("RestrictedApi")
-    set(value) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            this.imageTintList = context.resColorStateList(value)
-        } else {
-            (this as AppCompatImageView).supportImageTintList = context.resColorStateList(value)
-        }
-    }
 
 /*------------------------------------SwipeRefreshLayout-----------------------------------------------*/
 
@@ -357,4 +341,44 @@ var SwipeRefreshLayout.backgroundColor: Int
     set(value) {
         setProgressBackgroundColorSchemeColor(this.context.resColor(value))
     }
+
+/*------------------------------------BottomNavigationView-----------------------------------------------*/
+
+val BottomNavigationView.selectedItem: Int
+    get() {
+    for (i in 0 until menu.size()) {
+        if (menu.getItem(i).isChecked) {
+            return i
+        }
+    }
+    return 0
+}
+
+fun BottomNavigationView.itemSelect(f: MenuItem.() -> Boolean) {
+    setOnNavigationItemSelectedListener {
+        f(it)
+    }
+}
+
+/**
+ * Adds an [RecyclerView.OnScrollListener] to show or hide the FloatingActionButton when the RecyclerView scrolls up
+ * or down respectively
+ */
+fun RecyclerView.bindFloatingActionButton(fab: FloatingActionButton) = this.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+        super.onScrolled(recyclerView, dx, dy)
+        if (dy > 0 && fab.isShown) {
+            fab.hide()
+        } else if (dy < 0 && !fab.isShown) {
+            fab.show()
+        }
+    }
+})
+
+fun <T : RecyclerView.ViewHolder> T.onClick(event: (position: Int, type: Int) -> Unit): T {
+    itemView.setOnClickListener {
+        event(adapterPosition, itemViewType)
+    }
+    return this
+}
 

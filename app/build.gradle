@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 28
@@ -9,19 +10,23 @@ android {
         minSdkVersion 19
         targetSdkVersion 28
         versionCode 1
-        versionName "1.0"
+        versionName "1.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+        debug {
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-}
-repositories {
-    maven {
-        url  "https://dl.bintray.com/amitsahni/Library"
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+    compileOptions {
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
@@ -33,7 +38,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation 'com.github.amitsahni:manager:1.0.6'
-    implementation 'com.github.amitsahni:http:1.0.7.7-alpha'
+    implementation 'com.amitsahni:http:2.0.0'
     implementation project(':extension')
     // Koin for Android
     implementation 'org.koin:koin-android:1.0.2'
@@ -41,6 +46,16 @@ dependencies {
     implementation 'org.koin:koin-android-scope:1.0.2'
     // or Koin for Android Architecture ViewModel
     implementation 'org.koin:koin-android-viewmodel:1.0.2'
-//    implementation 'com.amitsahni:extension:0.0.1-alpha'
+    //    implementation 'com.amitsahni:extension:0.0.1-alpha'
+    // Add dependency
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.9'
+}
 
+task versionName() {
+    println("Version Code = $project.android.defaultConfig.versionCode")
+    println("Version Name = $project.android.defaultConfig.versionName")
+    println("ApplicationId = $project.android.defaultConfig.applicationId")
+    android.applicationVariants.all { variant ->
+        println("Variant Name = ${variant.name.capitalize()}")
+    }
 }

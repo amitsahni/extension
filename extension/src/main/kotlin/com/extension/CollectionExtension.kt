@@ -1,3 +1,4 @@
+@file:JvmName("CollectionUtils")
 package com.extension
 
 fun <T> Array<T>?.isBlank(): Boolean = this == null || isEmpty()
