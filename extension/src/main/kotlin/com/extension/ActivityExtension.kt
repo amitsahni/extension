@@ -6,12 +6,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.provider.MediaStore
-import android.support.v4.app.ActivityOptionsCompat
-import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
-import android.support.v4.content.FileProvider
-import android.support.v4.util.Pair
-import android.support.v7.app.AppCompatActivity
+import androidx.core.app.ActivityOptionsCompat
+import androidx.fragment.app.Fragment
+import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
+import androidx.core.util.Pair
+import androidx.appcompat.app.AppCompatActivity
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import inTransaction
@@ -72,7 +72,7 @@ inline fun <reified T : Activity> Activity.startActivityForResult(resultCode: In
     startActivityForResult(intent, resultCode, optionsCompat.toBundle())
 }
 
-fun AppCompatActivity.addFragment(fragment: Fragment, frameId: Int, addToBackStack: Boolean = true) {
+fun AppCompatActivity.addFragment(fragment: androidx.fragment.app.Fragment, frameId: Int, addToBackStack: Boolean = true) {
     supportFragmentManager?.inTransaction {
         val ft = add(frameId, fragment)
         if (addToBackStack) ft.addToBackStack(fragment.tag)
@@ -80,7 +80,7 @@ fun AppCompatActivity.addFragment(fragment: Fragment, frameId: Int, addToBackSta
     }
 }
 
-fun AppCompatActivity.replaceFragment(fragment: Fragment, frameId: Int, addToBackStack: Boolean = true) {
+fun AppCompatActivity.replaceFragment(fragment: androidx.fragment.app.Fragment, frameId: Int, addToBackStack: Boolean = true) {
     supportFragmentManager?.inTransaction {
         val ft = replace(frameId, fragment)
         if (addToBackStack) ft.addToBackStack(fragment.tag)
@@ -88,7 +88,7 @@ fun AppCompatActivity.replaceFragment(fragment: Fragment, frameId: Int, addToBac
     }
 }
 
-fun AppCompatActivity.replaceFragment(fragment: Fragment, frameId: Int, vararg sharedElements: View, addToBackStack: Boolean = true) {
+fun AppCompatActivity.replaceFragment(fragment: androidx.fragment.app.Fragment, frameId: Int, vararg sharedElements: View, addToBackStack: Boolean = true) {
     supportFragmentManager?.inTransaction {
         val ft = replace(frameId, fragment)
         if (addToBackStack) ft.addToBackStack(fragment.tag)

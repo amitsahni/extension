@@ -3,11 +3,11 @@ package com.extension
 
 import android.app.Dialog
 import android.content.Context
-import android.support.annotation.LayoutRes
-import android.support.annotation.StringRes
-import android.support.annotation.StyleRes
-import android.support.design.widget.Snackbar
-import android.support.v7.app.AlertDialog
+import androidx.annotation.LayoutRes
+import androidx.annotation.StringRes
+import androidx.annotation.StyleRes
+import com.google.android.material.snackbar.Snackbar
+import androidx.appcompat.app.AlertDialog
 import android.view.View
 import android.view.Window
 import android.widget.Toast

@@ -7,9 +7,9 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.AsyncTask
 import android.os.Build
-import android.support.annotation.ColorRes
-import android.support.annotation.DrawableRes
-import android.support.v7.widget.AppCompatImageView
+import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
+import androidx.appcompat.widget.AppCompatImageView
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource

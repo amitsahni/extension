@@ -10,9 +10,9 @@ import android.net.Uri
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
-import android.support.annotation.*
-import android.support.v4.app.ActivityOptionsCompat
-import android.support.v4.content.ContextCompat
+import androidx.annotation.*
+import androidx.core.app.ActivityOptionsCompat
+import androidx.core.content.ContextCompat
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View

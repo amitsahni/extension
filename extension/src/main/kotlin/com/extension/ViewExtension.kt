@@ -4,12 +4,12 @@ package com.extension
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
-import android.support.annotation.*
-import android.support.design.widget.BottomNavigationView
-import android.support.design.widget.FloatingActionButton
-import android.support.v4.graphics.drawable.DrawableCompat
-import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.widget.*
+import androidx.annotation.*
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import androidx.core.graphics.drawable.DrawableCompat
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import androidx.appcompat.widget.*
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.TypedValue
@@ -336,7 +336,7 @@ inline fun EditText.beforeTextChanged(crossinline beforeTextChanged: (CharSequen
 
 /*------------------------------------SwipeRefreshLayout-----------------------------------------------*/
 
-var SwipeRefreshLayout.backgroundColor: Int
+var androidx.swiperefreshlayout.widget.SwipeRefreshLayout.backgroundColor: Int
     @ColorRes get() = backgroundColor
     set(value) {
         setProgressBackgroundColorSchemeColor(this.context.resColor(value))
@@ -364,8 +364,8 @@ fun BottomNavigationView.itemSelect(f: MenuItem.() -> Boolean) {
  * Adds an [RecyclerView.OnScrollListener] to show or hide the FloatingActionButton when the RecyclerView scrolls up
  * or down respectively
  */
-fun RecyclerView.bindFloatingActionButton(fab: FloatingActionButton) = this.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+fun androidx.recyclerview.widget.RecyclerView.bindFloatingActionButton(fab: FloatingActionButton) = this.addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
+    override fun onScrolled(recyclerView: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
         super.onScrolled(recyclerView, dx, dy)
         if (dy > 0 && fab.isShown) {
             fab.hide()
@@ -375,7 +375,7 @@ fun RecyclerView.bindFloatingActionButton(fab: FloatingActionButton) = this.addO
     }
 })
 
-fun <T : RecyclerView.ViewHolder> T.onClick(event: (position: Int, type: Int) -> Unit): T {
+fun <T : androidx.recyclerview.widget.RecyclerView.ViewHolder> T.onClick(event: (position: Int, type: Int) -> Unit): T {
     itemView.setOnClickListener {
         event(adapterPosition, itemViewType)
     }
