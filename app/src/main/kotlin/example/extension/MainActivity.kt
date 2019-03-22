@@ -65,12 +65,7 @@ class MainActivity : AppCompatActivity() {
         }
 //        image.load(url)
         url.isJson.printInfo()
-        val builder = AlertDialog.Builder(this)
-                .setTitle("adf")
-                .setMessage("Adfadsf")
-                .setCancelable(true)
-                .create()
-        alert("d") {
+        alert("Title") {
             setCancelable(true)
             setPositiveButton("df") { _, _ ->
 
@@ -163,7 +158,6 @@ class MainActivity : AppCompatActivity() {
             createImageFile("abc.jpg")
             createImageFile("abc.text")
             val file = getImageFile("abc.jpg")
-            val a = "10"
             println(file?.toString())
             println(now)
             println(currentUTC)

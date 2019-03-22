@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.content.Context
 import android.support.annotation.LayoutRes
 import android.support.annotation.StringRes
+import android.support.annotation.StyleRes
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
 import android.view.View
@@ -23,43 +24,21 @@ fun Dialog.customView(view: View, isCancelable: Boolean = true) {
     setCancelable(isCancelable)
 }
 
-fun AlertDialog.singleChoice(buttonText: String, f: () -> Unit) {
-    setButton(AlertDialog.BUTTON_POSITIVE, buttonText) { dialog, _ ->
-        f()
-        dialog.dismiss()
-    }
-    this.show()
-}
-
-fun AlertDialog.doubleChoice(positiveButtonText: String, negativeButtonText: String, f: (Int) -> Unit) {
-    setButton(AlertDialog.BUTTON_POSITIVE, positiveButtonText) { dialog, _ ->
-        f(AlertDialog.BUTTON_POSITIVE)
-        dialog.dismiss()
-    }
-    setButton(AlertDialog.BUTTON_NEGATIVE, negativeButtonText) { dialog, _ ->
-        f(AlertDialog.BUTTON_NEGATIVE)
-        dialog.dismiss()
-    }
-    show()
-}
-
-fun AlertDialog.customView(view: View, f: View.() -> Unit) {
-    setView(view)
-    f(view)
-    show()
-}
-
-fun Context.alert(title: String, message: String = "", f: AlertDialog.Builder.() -> Unit) {
+fun Context.alert(message: String = "", f: AlertDialog.Builder.() -> Unit) {
     val dialog = AlertDialog.Builder(this)
-    dialog.setTitle(title)
     dialog.setMessage(message)
     f(dialog)
     dialog.show()
 }
 
-fun View.snackBar(message: String) {
-    Snackbar.make(this, message, Snackbar.LENGTH_SHORT).show()
+fun Context.alert(message: String = "", @StyleRes themeResId: Int, f: AlertDialog.Builder.() -> Unit) {
+    val dialog = AlertDialog.Builder(this, themeResId)
+    dialog.setMessage(message)
+    f(dialog)
+    dialog.show()
 }
+
+fun View.snackBar(message: String) = Snackbar.make(this, message, Snackbar.LENGTH_SHORT).show()
 
 fun View.snackBar(message: String, actionMessage: String, f: View.() -> Unit) {
     Snackbar.make(this, message, Snackbar.LENGTH_SHORT)
@@ -68,9 +47,7 @@ fun View.snackBar(message: String, actionMessage: String, f: View.() -> Unit) {
             }.show()
 }
 
-fun View.longSnackBar(message: String) {
-    Snackbar.make(this, message, Snackbar.LENGTH_LONG).show()
-}
+fun View.longSnackBar(message: String) = Snackbar.make(this, message, Snackbar.LENGTH_LONG).show()
 
 fun View.longSnackBar(message: String, actionMessage: String, f: View.() -> Unit) {
     Snackbar.make(this, message, Snackbar.LENGTH_LONG)
@@ -79,20 +56,13 @@ fun View.longSnackBar(message: String, actionMessage: String, f: View.() -> Unit
             }.show()
 }
 
-fun Context.toast(message: String) {
-    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-}
+fun Context.toast(message: String) = Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 
-fun Context.toast(@StringRes resId: Int) {
-    Toast.makeText(this, resId, Toast.LENGTH_SHORT).show()
-}
+fun Context.toast(@StringRes resId: Int) = Toast.makeText(this, resId, Toast.LENGTH_SHORT).show()
 
-fun Context.longToast(message: String) {
-    Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-}
+fun Context.longToast(message: String) = Toast.makeText(this, message, Toast.LENGTH_LONG).show()
 
-fun Context.longToast(@StringRes resId: Int) {
-    Toast.makeText(this, resId, Toast.LENGTH_LONG).show()
-}
+fun Context.longToast(@StringRes resId: Int) = Toast.makeText(this, resId, Toast.LENGTH_LONG).show()
+
 
 

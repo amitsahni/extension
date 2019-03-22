@@ -117,7 +117,7 @@ fun ImageView.load(image: String, @DrawableRes placeHolder: Int = -1, transforma
 }
 
 @SuppressLint("CheckResult")
-fun Context.downloadBitmap(image: String, resizeHeight: Int = 405, resizeWidth: Int = 720, f: Bitmap?.() -> Unit) {
+fun Context.downloadBitmap(image: String, f: Bitmap?.() -> Unit) {
     Glide.with(applicationContext)
             .asBitmap()
             .load(image)
@@ -136,7 +136,7 @@ fun Context.downloadBitmap(image: String, resizeHeight: Int = 405, resizeWidth: 
 }
 
 @SuppressLint("CheckResult")
-fun Context.downloadFile(image: String, resizeHeight: Int = 405, resizeWidth: Int = 720, f: File?.() -> Unit) {
+fun Context.downloadFile(image: String, f: File?.() -> Unit) {
     Glide.with(applicationContext)
             .downloadOnly()
             .load(image)
