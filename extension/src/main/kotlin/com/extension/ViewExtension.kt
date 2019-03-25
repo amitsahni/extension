@@ -2,14 +2,9 @@
 package com.extension
 
 import android.annotation.SuppressLint
+import android.annotation.TargetApi
 import android.content.Context
 import android.os.Build
-import androidx.annotation.*
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import androidx.core.graphics.drawable.DrawableCompat
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import androidx.appcompat.widget.*
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.TypedValue
@@ -20,6 +15,11 @@ import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
+import androidx.annotation.*
+import androidx.appcompat.widget.*
+import androidx.core.graphics.drawable.DrawableCompat
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 
 /*------------------------------------View---------------------------------------------*/
@@ -84,6 +84,8 @@ fun View.hideKeyboard(): Boolean {
  * Extension method to remove the required boilerplate for running code after a view has been
  * inflated and measured.
  */
+@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+@RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
 inline fun <T : View> T.afterMeasured(crossinline f: T.() -> Unit) {
     viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
         override fun onGlobalLayout() {
@@ -101,7 +103,11 @@ inline fun <T : View> T.afterMeasured(crossinline f: T.() -> Unit) {
 var View.setPaddingStart: Int
     @DimenRes get() = setPaddingStart
     set(value) {
-        setPaddingRelative(value, paddingTop, paddingEnd, paddingBottom)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            setPaddingRelative(value, paddingTop, paddingEnd, paddingBottom)
+        } else {
+            setPadding(value, paddingTop, paddingRight, paddingBottom)
+        }
     }
 
 /**
@@ -110,7 +116,11 @@ var View.setPaddingStart: Int
 var View.setPaddingEnd: Int
     @DimenRes get() = setPaddingEnd
     set(value) {
-        setPaddingRelative(paddingStart, paddingTop, value, paddingBottom)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            setPaddingRelative(paddingStart, paddingTop, value, paddingBottom)
+        } else {
+            setPadding(paddingLeft, paddingTop, value, paddingBottom)
+        }
     }
 /**
  * Extension method to set View's top padding.
@@ -118,7 +128,11 @@ var View.setPaddingEnd: Int
 var View.setPaddingTop: Int
     @DimenRes get() = setPaddingTop
     set(value) {
-        setPaddingRelative(paddingStart, value, paddingEnd, paddingBottom)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            setPaddingRelative(paddingStart, value, paddingEnd, paddingBottom)
+        } else {
+            setPadding(paddingLeft, value, paddingRight, paddingBottom)
+        }
     }
 /**
  * Extension method to set View's bottom padding.
@@ -126,7 +140,11 @@ var View.setPaddingTop: Int
 var View.setPaddingBottom: Int
     @DimenRes get() = setPaddingBottom
     set(value) {
-        setPaddingRelative(paddingStart, paddingTop, paddingEnd, value)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            setPaddingRelative(paddingStart, paddingTop, paddingEnd, value)
+        } else {
+            setPadding(paddingLeft, paddingTop, paddingRight, value)
+        }
     }
 /**
  * Extension method to set View's horizontal padding.
@@ -134,7 +152,11 @@ var View.setPaddingBottom: Int
 var View.setPaddingHorizontal: Int
     @DimenRes get() = setPaddingHorizontal
     set(value) {
-        setPaddingRelative(value, paddingTop, value, paddingBottom)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            setPaddingRelative(value, paddingTop, value, paddingBottom)
+        } else {
+            setPadding(value, paddingTop, value, paddingBottom)
+        }
     }
 /**
  * Extension method to set View's vertical padding.
@@ -142,7 +164,11 @@ var View.setPaddingHorizontal: Int
 var View.setPaddingVertical: Int
     @DimenRes get() = setPaddingVertical
     set(value) {
-        setPaddingRelative(paddingStart, value, paddingEnd, value)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            setPaddingRelative(paddingStart, value, paddingEnd, value)
+        }else{
+            setPadding(paddingLeft, value, paddingRight , value)
+        }
     }
 /**
  * Extension method to set View's height.
@@ -251,7 +277,11 @@ inline fun ViewGroup.forEach(action: (View) -> Unit) {
 var TextView.drawableStart: Int
     @DrawableRes get() = drawableStart
     set(value) {
-        setCompoundDrawablesRelativeWithIntrinsicBounds(value, 0, 0, 0)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            setCompoundDrawablesRelativeWithIntrinsicBounds(value, 0, 0, 0)
+        } else {
+            setCompoundDrawablesWithIntrinsicBounds(value, 0, 0, 0)
+        }
     }
 
 
@@ -261,7 +291,11 @@ var TextView.drawableStart: Int
 var TextView.drawableEnd: Int
     @DrawableRes get() = drawableEnd
     set(value) {
-        setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, value, 0)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, value, 0)
+        } else {
+            setCompoundDrawablesWithIntrinsicBounds(0, 0, value, 0)
+        }
     }
 
 
