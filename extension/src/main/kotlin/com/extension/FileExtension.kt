@@ -10,7 +10,6 @@ import android.os.Environment
 import android.os.Environment.MEDIA_MOUNTED
 import android.provider.DocumentsContract
 import android.provider.MediaStore
-import androidx.loader.content.CursorLoader
 import java.io.File
 
 
@@ -153,10 +152,8 @@ private fun Context.getRealPathAPI11to18(contentUri: Uri): String? {
 
 private fun Context.getRealPathAPI19(uri: Uri): String? {
 
-    val isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
-
-    // DocumentProvider
-    if (isKitKat && DocumentsContract.isDocumentUri(this, uri)) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if (DocumentsContract.isDocumentUri(this, uri)) {
         // ExternalStorageProvider
         if (uri.isExternalStorageDocument()) {
             val docId = DocumentsContract.getDocumentId(uri)
@@ -196,16 +193,14 @@ private fun Context.getRealPathAPI19(uri: Uri): String? {
             return getDataColumn(this, contentUri, selection, selectionArgs)
         }// MediaProvider
         // DownloadsProvider
+        }
     } else if ("content".equals(uri.scheme!!, ignoreCase = true)) {
-
         // Return the remote address
         return if (uri.isGooglePhotosUri()) uri.lastPathSegment else getDataColumn(this, uri, null, null)
-
     } else if ("file".equals(uri.scheme!!, ignoreCase = true)) {
         return uri.path
     }// File
     // MediaStore (and general)
-
     return null
 }
 
