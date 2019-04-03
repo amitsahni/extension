@@ -1,7 +1,6 @@
 @file:JvmName("ActivityUtils")
 package com.extension
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -20,7 +19,7 @@ import inTransaction
 /*------------------------------------Activity---------------------------------------------*/
 
 
-fun Activity.hideSoftKeyboard() {
+fun AppCompatActivity.hideSoftKeyboard() {
     currentFocus?.let {
         val inputMethodManager = getSystemService(
                 Context
@@ -30,42 +29,42 @@ fun Activity.hideSoftKeyboard() {
     }
 }
 
-inline fun <reified T : Any> Activity.extra(key: String, default: T? = null) = lazy {
+inline fun <reified T : Any> AppCompatActivity.extra(key: String, default: T? = null) = lazy {
     val value = intent?.extras?.get(key)
     if (value is T) value else default
 }
 
-inline fun <reified T : Activity> Activity.startActivity(sharedElements: Pair<View, String>) {
+inline fun <reified T : AppCompatActivity> AppCompatActivity.startActivity(sharedElements: Pair<View, String>) {
     val intent = Intent(this, T::class.java)
     val optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(this, sharedElements)
     ContextCompat.startActivity(this, intent, optionsCompat.toBundle())
 }
 
-inline fun <reified T : Activity> Activity.startActivity(body: Intent.() -> Unit, sharedElements: Pair<View, String>) {
+inline fun <reified T : AppCompatActivity> AppCompatActivity.startActivity(body: Intent.() -> Unit, sharedElements: Pair<View, String>) {
     val intent = Intent(this, T::class.java)
     intent.body()
     val optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(this, sharedElements)
     ContextCompat.startActivity(this, intent, optionsCompat.toBundle())
 }
 
-inline fun <reified T : Activity> Activity.startActivityForResult(resultCode: Int) {
+inline fun <reified T : AppCompatActivity> AppCompatActivity.startActivityForResult(resultCode: Int) {
     val intent = Intent(this, T::class.java)
     startActivityForResult(intent, resultCode)
 }
 
-inline fun <reified T : Activity> Activity.startActivityForResult(resultCode: Int, body: Intent.() -> Unit) {
+inline fun <reified T : AppCompatActivity> AppCompatActivity.startActivityForResult(resultCode: Int, body: Intent.() -> Unit) {
     val intent = Intent(this, T::class.java)
     intent.body()
     startActivityForResult(intent, resultCode)
 }
 
-inline fun <reified T : Activity> Activity.startActivityForResult(resultCode: Int, sharedElements: Pair<View, String>) {
+inline fun <reified T : AppCompatActivity> AppCompatActivity.startActivityForResult(resultCode: Int, sharedElements: Pair<View, String>) {
     val intent = Intent(this, T::class.java)
     val optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(this, sharedElements)
     startActivityForResult(intent, resultCode, optionsCompat.toBundle())
 }
 
-inline fun <reified T : Activity> Activity.startActivityForResult(resultCode: Int, sharedElements: Pair<View, String>, body: Intent.() -> Unit) {
+inline fun <reified T : AppCompatActivity> AppCompatActivity.startActivityForResult(resultCode: Int, sharedElements: Pair<View, String>, body: Intent.() -> Unit) {
     val intent = Intent(this, T::class.java)
     intent.body()
     val optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(this, sharedElements)
@@ -111,14 +110,14 @@ fun AppCompatActivity.popFragment(frameId: Int) {
     }
 }
 
-fun Activity.gallery(requestCode: Int) {
+fun AppCompatActivity.gallery(requestCode: Int) {
     val intent = Intent()
     intent.type = "image/*"
     intent.action = Intent.ACTION_GET_CONTENT
     startActivityForResult(intent, requestCode)
 }
 
-fun Activity.camera(requestCode: Int) {
+fun AppCompatActivity.camera(requestCode: Int) {
     val intent = Intent(
             android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
     val imagePath = createImageFile("camera.png")

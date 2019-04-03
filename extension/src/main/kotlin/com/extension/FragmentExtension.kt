@@ -1,5 +1,5 @@
 @file:JvmName("FragmentUtils")
-import android.app.Activity
+import android.support.v7.app.AppCompatActivity
 import android.content.Intent
 import android.support.annotation.*
 import android.support.v4.app.ActivityOptionsCompat
@@ -33,7 +33,7 @@ fun Fragment.resIntArray(@ArrayRes intArrRes: Int) = this.context?.resIntArray(i
 fun Fragment.resStrArray(@ArrayRes strArrRes: Int) = this.context?.resStrArray(strArrRes)
 
 fun Fragment.hideSoftKeyboard() {
-    activity?.hideSoftKeyboard()
+    (activity as AppCompatActivity).hideSoftKeyboard()
 }
 
 inline fun <reified T : Any> Fragment.extra(key: String, default: T? = null) = lazy {
@@ -41,7 +41,7 @@ inline fun <reified T : Any> Fragment.extra(key: String, default: T? = null) = l
     if (value is T) value else default
 }
 
-inline fun <reified T : Activity> Fragment.startActivity(sharedElements: Pair<View, String>) {
+inline fun <reified T : AppCompatActivity> Fragment.startActivity(sharedElements: Pair<View, String>) {
     this.activity?.also {
         val intent = Intent(it, T::class.java)
         val optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(it, sharedElements)
@@ -49,7 +49,7 @@ inline fun <reified T : Activity> Fragment.startActivity(sharedElements: Pair<Vi
     }
 }
 
-inline fun <reified T : Activity> Fragment.startActivity(body: Intent.() -> Unit, sharedElements: Pair<View, String>) {
+inline fun <reified T : AppCompatActivity> Fragment.startActivity(body: Intent.() -> Unit, sharedElements: Pair<View, String>) {
     this.activity?.also {
         val intent = Intent(it, T::class.java)
         intent.body()
@@ -58,14 +58,14 @@ inline fun <reified T : Activity> Fragment.startActivity(body: Intent.() -> Unit
     }
 }
 
-inline fun <reified T : Activity> Fragment.startActivityForResult(resultCode: Int) {
+inline fun <reified T : AppCompatActivity> Fragment.startActivityForResult(resultCode: Int) {
     this.activity?.also {
         val intent = Intent(it, T::class.java)
         startActivityForResult(intent, resultCode)
     }
 }
 
-inline fun <reified T : Activity> Fragment.startActivityForResult(resultCode: Int, body: Intent.() -> Unit) {
+inline fun <reified T : AppCompatActivity> Fragment.startActivityForResult(resultCode: Int, body: Intent.() -> Unit) {
     this.activity?.also {
         val intent = Intent(it, T::class.java)
         intent.body()
@@ -73,7 +73,7 @@ inline fun <reified T : Activity> Fragment.startActivityForResult(resultCode: In
     }
 }
 
-inline fun <reified T : Activity> Fragment.startActivityForResult(resultCode: Int, sharedElements: Pair<View, String>) {
+inline fun <reified T : AppCompatActivity> Fragment.startActivityForResult(resultCode: Int, sharedElements: Pair<View, String>) {
     this.activity?.also {
         val intent = Intent(it, T::class.java)
         val optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(it, sharedElements)
@@ -81,7 +81,7 @@ inline fun <reified T : Activity> Fragment.startActivityForResult(resultCode: In
     }
 }
 
-inline fun <reified T : Activity> Fragment.startActivityForResult(resultCode: Int, sharedElements: Pair<View, String>, body: Intent.() -> Unit) {
+inline fun <reified T : AppCompatActivity> Fragment.startActivityForResult(resultCode: Int, sharedElements: Pair<View, String>, body: Intent.() -> Unit) {
     this.activity?.also {
         val intent = Intent(it, T::class.java)
         intent.body()
