@@ -8,6 +8,7 @@ import android.util.Log
 class AppViewModel(application: Application) : AndroidViewModel(application) {
 
     fun init() {
+
         Log.d(AppViewModel::class.java.simpleName, "Context = ${getApplication<Application>()}")
     }
 }

@@ -1,6 +1,7 @@
 @file:JvmName("FileUtils")
 package com.extension
 
+import android.annotation.SuppressLint
 import android.content.ContentUris
 import android.content.Context
 import android.database.Cursor
@@ -151,6 +152,7 @@ private fun Context.getRealPathAPI11to18(contentUri: Uri): String? {
     return result
 }
 
+@SuppressLint("NewApi")
 private fun Context.getRealPathAPI19(uri: Uri): String? {
 
     val isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
@@ -172,7 +174,7 @@ private fun Context.getRealPathAPI19(uri: Uri): String? {
 
             val id = DocumentsContract.getDocumentId(uri)
             val contentUri = ContentUris.withAppendedId(
-                Uri.parse("content://downloads/public_downloads"), java.lang.Long.valueOf(id)
+                    Uri.parse("content://downloads/public_downloads"), java.lang.Long.valueOf(id)
             )
 
             return getDataColumn(this, contentUri, null, null)

@@ -54,6 +54,7 @@ class MainActivity : AppCompatActivity() {
         Log.i(localClassName, "AbcModule().components.context = ${abcModule.init()}")
         "Hello".printInfo()
         "Hello".printError()
+        text.drawableStart = android.R.drawable.ic_delete
 //        context.downloadFile(url) {
 //            this?.path?.printInfo()
 //            image.setImageURI(Uri.fromFile(this))

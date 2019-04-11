@@ -3,6 +3,7 @@ package com.extension
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.support.annotation.*
 import android.support.design.widget.BottomNavigationView
@@ -84,7 +85,7 @@ fun View.hideKeyboard(): Boolean {
  * Extension method to remove the required boilerplate for running code after a view has been
  * inflated and measured.
  */
-inline fun <T : View> T.afterMeasured(crossinline f: T.() -> Unit) {
+fun <T : View> T.afterMeasured(f: T.() -> Unit) {
     viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
         override fun onGlobalLayout() {
             if (measuredWidth > 0 && measuredHeight > 0) {
@@ -164,7 +165,7 @@ var View.setWidth: Int
     set(value) {
         val lp = layoutParams
         lp?.let {
-            lp.height = value
+            lp.width = value
             layoutParams = lp
         }
     }
@@ -251,7 +252,12 @@ inline fun ViewGroup.forEach(action: (View) -> Unit) {
 var TextView.drawableStart: Int
     @DrawableRes get() = drawableStart
     set(value) {
-        setCompoundDrawablesRelativeWithIntrinsicBounds(value, 0, 0, 0)
+        val d = this.compoundDrawablesRelative
+        var start: Drawable? = null
+        if (value != -1) {
+            start = this.context.resDrawable(value)!!
+        }
+        this.setCompoundDrawablesRelativeWithIntrinsicBounds(start, d[1], d[2], d[3])
     }
 
 
@@ -261,7 +267,34 @@ var TextView.drawableStart: Int
 var TextView.drawableEnd: Int
     @DrawableRes get() = drawableEnd
     set(value) {
-        setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, value, 0)
+        val d = this.compoundDrawablesRelative
+        var end: Drawable? = null
+        if (value != -1) {
+            end = this.context.resDrawable(value)!!
+        }
+        this.setCompoundDrawablesRelativeWithIntrinsicBounds(d[0], d[1], end, d[3])
+    }
+
+var TextView.drawableTop: Int
+    @DrawableRes get() = drawableTop
+    set(value) {
+        val d = this.compoundDrawablesRelative
+        var top: Drawable? = null
+        if (value != -1) {
+            top = this.context.resDrawable(value)!!
+        }
+        this.setCompoundDrawablesRelativeWithIntrinsicBounds(d[0], top, d[2], d[3])
+    }
+
+var TextView.drawableBottom: Int
+    @DrawableRes get() = drawableBottom
+    set(value) {
+        val d = this.compoundDrawablesRelative
+        var bottom: Drawable? = null
+        if (value != -1) {
+            bottom = this.context.resDrawable(value)!!
+        }
+        this.setCompoundDrawablesRelativeWithIntrinsicBounds(d[0], d[1], d[2], bottom)
     }
 
 
@@ -291,7 +324,7 @@ var TextView.textColor: Int
 
 /*------------------------------------EditText-----------------------------------------------*/
 
-inline fun EditText.afterTextChanged(crossinline afterTextChanged: (Editable?) -> Unit) {
+fun EditText.afterTextChanged(afterTextChanged: (Editable?) -> Unit) {
     this.addTextChangedListener(object : TextWatcher {
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
         }
@@ -300,18 +333,18 @@ inline fun EditText.afterTextChanged(crossinline afterTextChanged: (Editable?) -
         }
 
         override fun afterTextChanged(editable: Editable?) {
-            afterTextChanged.invoke(editable)
+            afterTextChanged(editable)
         }
     })
 }
 
-inline fun EditText.onTextChanged(crossinline onTextChanged: (CharSequence?, Int, Int, Int) -> Unit) {
+fun EditText.onTextChanged(onTextChanged: (CharSequence?, Int, Int, Int) -> Unit) {
     this.addTextChangedListener(object : TextWatcher {
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
         }
 
         override fun onTextChanged(p0: CharSequence?, start: Int, before: Int, count: Int) {
-            onTextChanged.invoke(p0, start, before, count)
+            onTextChanged(p0, start, before, count)
         }
 
         override fun afterTextChanged(editable: Editable?) {
@@ -319,10 +352,10 @@ inline fun EditText.onTextChanged(crossinline onTextChanged: (CharSequence?, Int
     })
 }
 
-inline fun EditText.beforeTextChanged(crossinline beforeTextChanged: (CharSequence?, Int, Int, Int) -> Unit) {
+fun EditText.beforeTextChanged(beforeTextChanged: (CharSequence?, Int, Int, Int) -> Unit) {
     this.addTextChangedListener(object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-            beforeTextChanged.invoke(s, start, count, after)
+            beforeTextChanged(s, start, count, after)
         }
 
 

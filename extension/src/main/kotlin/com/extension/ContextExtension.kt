@@ -114,32 +114,32 @@ fun Context.resStrArray(@ArrayRes strArrRes: Int) = this.resources.getStringArra
 fun Context.inflateLayout(@LayoutRes layoutId: Int, parent: ViewGroup? = null, attachToRoot: Boolean = false): View =
     LayoutInflater.from(this).inflate(layoutId, parent, attachToRoot)
 
-inline fun <reified T : android.support.v7.app.AppCompatActivity> Context.intent() = Intent(this, T::class.java)
+inline fun <reified T : AppCompatActivity> Context.intent() = Intent(this, T::class.java)
 
-inline fun <reified T : android.support.v7.app.AppCompatActivity> Context.intent(body: Intent.() -> Unit): Intent {
+inline fun <reified T : AppCompatActivity> Context.intent(body: Intent.() -> Unit): Intent {
     val intent = Intent(this, T::class.java)
     intent.body()
     return intent
 }
 
-inline fun <reified T : android.support.v7.app.AppCompatActivity> Context.startActivity() {
+inline fun <reified T : AppCompatActivity> Context.startActivity() {
     val intent = Intent(this, T::class.java)
     ContextCompat.startActivity(this, intent, null)
 }
 
-inline fun <reified T : android.support.v7.app.AppCompatActivity> Context.startActivity(body: Intent.() -> Unit) {
+inline fun <reified T : AppCompatActivity> Context.startActivity(body: Intent.() -> Unit) {
     val intent = Intent(this, T::class.java)
     intent.body()
     ContextCompat.startActivity(this, intent, null)
 }
 
-inline fun <reified T : android.support.v7.app.AppCompatActivity> Context.startActivity(@AnimRes enterResId: Int = 0, @AnimRes exitResId: Int = 0) {
+inline fun <reified T : AppCompatActivity> Context.startActivity(@AnimRes enterResId: Int = 0, @AnimRes exitResId: Int = 0) {
     val intent = Intent(this, T::class.java)
     val optionsCompat = ActivityOptionsCompat.makeCustomAnimation(this, enterResId, exitResId)
     ContextCompat.startActivity(this, intent, optionsCompat.toBundle())
 }
 
-inline fun <reified T : android.support.v7.app.AppCompatActivity> Context.startActivity(@AnimRes enterResId: Int = 0, @AnimRes exitResId: Int = 0,
+inline fun <reified T : AppCompatActivity> Context.startActivity(@AnimRes enterResId: Int = 0, @AnimRes exitResId: Int = 0,
                                                                                         body: Intent.() -> Unit) {
     val intent = Intent(this, T::class.java)
     intent.body()

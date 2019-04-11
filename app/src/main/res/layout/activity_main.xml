@@ -9,7 +9,10 @@
      
      <TextView
           android:id="@+id/text"
+         android:drawableTop="@android:drawable/btn_star_big_off"
+         android:drawableBottom="@android:drawable/btn_star"
           android:layout_width="wrap_content"
+         android:gravity="center"
           android:layout_height="wrap_content"
           android:text="Hello World!"/>
      
