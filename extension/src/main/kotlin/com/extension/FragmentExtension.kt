@@ -1,5 +1,4 @@
 @file:JvmName("FragmentUtils")
-import android.support.v7.app.AppCompatActivity
 import android.content.Intent
 import android.support.annotation.*
 import android.support.v4.app.ActivityOptionsCompat
@@ -8,6 +7,7 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
 import android.support.v4.content.ContextCompat
 import android.support.v4.util.Pair
+import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.extension.*
 
@@ -36,9 +36,47 @@ fun Fragment.hideSoftKeyboard() {
     (activity as AppCompatActivity).hideSoftKeyboard()
 }
 
+val Fragment.activityCompat: AppCompatActivity
+    get() {
+        return this.activity as AppCompatActivity
+    }
+
 inline fun <reified T : Any> Fragment.extra(key: String, default: T? = null) = lazy {
     val value = arguments?.get(key)
     if (value is T) value else default
+}
+
+inline fun <reified T : AppCompatActivity> Fragment.startActivity() {
+    this.activity?.also {
+        val intent = Intent(it, T::class.java)
+        ContextCompat.startActivity(it, intent, null)
+    }
+}
+
+inline fun <reified T : AppCompatActivity> Fragment.startActivity(body: Intent.() -> Unit) {
+    this.activity?.also {
+        val intent = Intent(it, T::class.java)
+        intent.body()
+        ContextCompat.startActivity(it, intent, null)
+    }
+}
+
+inline fun <reified T : AppCompatActivity> Fragment.startActivity(@AnimRes enterResId: Int = 0, @AnimRes exitResId: Int = 0) {
+    this.activity?.also {
+        val intent = Intent(it, T::class.java)
+        val optionsCompat = ActivityOptionsCompat.makeCustomAnimation(it, enterResId, exitResId)
+        ContextCompat.startActivity(it, intent, optionsCompat.toBundle())
+    }
+}
+
+inline fun <reified T : AppCompatActivity> Fragment.startActivity(@AnimRes enterResId: Int = 0, @AnimRes exitResId: Int = 0,
+                                                                  body: Intent.() -> Unit) {
+    this.activity?.also {
+        val intent = Intent(it, T::class.java)
+        intent.body()
+        val optionsCompat = ActivityOptionsCompat.makeCustomAnimation(it, enterResId, exitResId)
+        ContextCompat.startActivity(it, intent, optionsCompat.toBundle())
+    }
 }
 
 inline fun <reified T : AppCompatActivity> Fragment.startActivity(sharedElements: Pair<View, String>) {
