@@ -24,16 +24,14 @@ fun Dialog.customView(view: View, isCancelable: Boolean = true) {
     setCancelable(isCancelable)
 }
 
-fun Context.alert(message: String = "", f: AlertDialog.Builder.() -> Unit) {
+fun Context.alert(f: AlertDialog.Builder.() -> Unit) {
     val dialog = AlertDialog.Builder(this)
-    dialog.setMessage(message)
     f(dialog)
     dialog.show()
 }
 
-fun Context.alert(message: String = "", @StyleRes themeResId: Int, f: AlertDialog.Builder.() -> Unit) {
+fun Context.alert(@StyleRes themeResId: Int, f: AlertDialog.Builder.() -> Unit) {
     val dialog = AlertDialog.Builder(this, themeResId)
-    dialog.setMessage(message)
     f(dialog)
     dialog.show()
 }
@@ -51,6 +49,25 @@ fun View.longSnackBar(message: String) = Snackbar.make(this, message, Snackbar.L
 
 fun View.longSnackBar(message: String, actionMessage: String, f: View.() -> Unit) {
     Snackbar.make(this, message, Snackbar.LENGTH_LONG)
+            .setAction(actionMessage) {
+                f()
+            }.show()
+}
+
+
+fun View.snackBar(@StringRes resId: Int) = Snackbar.make(this, resId, Snackbar.LENGTH_SHORT).show()
+
+fun View.snackBar(@StringRes resId: Int, actionMessage: String, f: View.() -> Unit) {
+    Snackbar.make(this, resId, Snackbar.LENGTH_SHORT)
+            .setAction(actionMessage) {
+                f()
+            }.show()
+}
+
+fun View.longSnackBar(@StringRes resId: Int) = Snackbar.make(this, resId, Snackbar.LENGTH_LONG).show()
+
+fun View.longSnackBar(@StringRes resId: Int, actionMessage: String, f: View.() -> Unit) {
+    Snackbar.make(this, resId, Snackbar.LENGTH_LONG)
             .setAction(actionMessage) {
                 f()
             }.show()

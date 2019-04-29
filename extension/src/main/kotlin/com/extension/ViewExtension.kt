@@ -14,10 +14,7 @@ import android.support.v7.widget.*
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.TypedValue
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
-import android.view.ViewTreeObserver
+import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
@@ -365,6 +362,22 @@ fun EditText.beforeTextChanged(beforeTextChanged: (CharSequence?, Int, Int, Int)
         override fun afterTextChanged(editable: Editable?) {
         }
     })
+}
+
+@SuppressLint("ClickableViewAccessibility")
+fun EditText.onEndDrawableClick(click: EditText.() -> Unit) {
+    setOnTouchListener { v, event ->
+        var hasConsumed = false
+        if (v is EditText) {
+            if (event.x >= v.width - v.totalPaddingEnd) {
+                if (event.action == MotionEvent.ACTION_UP) {
+                    click(this)
+                }
+                hasConsumed = true
+            }
+        }
+        hasConsumed
+    }
 }
 
 /*------------------------------------SwipeRefreshLayout-----------------------------------------------*/

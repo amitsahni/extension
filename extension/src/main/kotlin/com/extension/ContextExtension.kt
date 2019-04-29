@@ -96,7 +96,7 @@ fun Context.resColorStateList(@ColorRes colorRes: Int) = ContextCompat.getColorS
 
 fun Context.resString(@StringRes stringRes: Int) = getString(stringRes)
 
-fun Context.resString(@StringRes stringRes: Int, vararg formatArgs: Any?) =
+fun Context.resString(@StringRes stringRes: Int, vararg formatArgs: Any) =
     getString(stringRes, formatArgs)
 
 fun Context.resDrawable(@DrawableRes drawableRes: Int) = ContextCompat.getDrawable(this, drawableRes)

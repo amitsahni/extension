@@ -17,7 +17,7 @@ fun Fragment.resColor(@ColorRes colorRes: Int) = this.context?.resColor(colorRes
 
 fun Fragment.resString(@StringRes stringRes: Int) = this.context?.resString(stringRes).orEmpty()
 
-fun Fragment.resString(@StringRes stringRes: Int, vararg formatArgs: Any?) =
+fun Fragment.resString(@StringRes stringRes: Int, vararg formatArgs: Any) =
         this.context?.resString(stringRes, formatArgs)
 
 fun Fragment.resDrawable(@DrawableRes drawableRes: Int) = this.context?.resDrawable(drawableRes)
