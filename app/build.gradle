@@ -48,7 +48,7 @@ dependencies {
     implementation 'org.koin:koin-android-viewmodel:1.0.2'
     //    implementation 'com.amitsahni:extension:0.0.1-alpha'
     // Add dependency
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.9'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.0'
 }
 
 task versionName() {
