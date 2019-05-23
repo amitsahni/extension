@@ -4,6 +4,7 @@ package com.extension
 import android.text.Editable
 import android.util.Patterns
 import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
 
 
 object G {
@@ -80,6 +81,20 @@ val String.isJson: Boolean
         }
         return false
     }
+
+fun <T> String?.fromTypedJson(): T {
+    val type = object : TypeToken<T>() {
+
+    }.type
+    return G.gson.fromJson<T>(this, type)
+}
+
+fun <T> Any?.toTypedJson(): String {
+    val type = object : TypeToken<T>() {
+
+    }.type
+    return G.gson.toJson(this, type)
+}
 
 
 

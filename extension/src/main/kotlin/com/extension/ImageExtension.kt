@@ -90,7 +90,60 @@ fun ImageView.load(image: String, @DrawableRes placeHolder: Int = -1, f: Bitmap?
 }
 
 @SuppressLint("CheckResult")
+fun ImageView.loadSkipCache(image: String, @DrawableRes placeHolder: Int = -1, f: Bitmap?.() -> Unit) {
+    val requestOptions = RequestOptions()
+    requestOptions.placeholder(placeHolder)
+    requestOptions.error(placeHolder)
+    requestOptions.skipMemoryCache(true)
+    requestOptions.diskCacheStrategy(DiskCacheStrategy.NONE)
+    Glide.with(context.applicationContext)
+            .asBitmap()
+            .load(image)
+            .apply(requestOptions)
+            .listener(object : RequestListener<Bitmap> {
+                override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Bitmap>?, isFirstResource: Boolean): Boolean {
+                    f(null)
+                    return false
+                }
+
+                override fun onResourceReady(resource: Bitmap?, model: Any?, target: Target<Bitmap>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                    f(resource)
+                    return true
+                }
+
+            })
+            .into(this)
+}
+
+@SuppressLint("CheckResult")
 fun ImageView.load(image: String, @DrawableRes placeHolder: Int = -1, transformations: Transformation<Bitmap>?, f: Bitmap?.() -> Unit) {
+    val requestOptions = RequestOptions()
+    requestOptions.placeholder(placeHolder)
+    requestOptions.error(placeHolder)
+    transformations?.also {
+        requestOptions.transform(it)
+    }
+    Glide.with(context.applicationContext)
+            .asBitmap()
+            .load(image)
+            .apply(requestOptions)
+            .listener(object : RequestListener<Bitmap> {
+                override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Bitmap>?, isFirstResource: Boolean): Boolean {
+                    f(null)
+                    return false
+                }
+
+                override fun onResourceReady(resource: Bitmap?, model: Any?, target: Target<Bitmap>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                    f(resource)
+                    return true
+                }
+
+            })
+            .into(this)
+}
+
+@SuppressLint("CheckResult")
+fun ImageView.loadSkipCache(image: String, @DrawableRes placeHolder: Int = -1, transformations: Transformation<Bitmap>?, f: Bitmap?.() -> Unit) {
     val requestOptions = RequestOptions()
     requestOptions.placeholder(placeHolder)
     requestOptions.error(placeHolder)

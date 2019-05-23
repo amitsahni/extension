@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
         }
 //        image.load(url)
         url.isJson.printInfo()
-        alert("Title") {
+        alert {
             setCancelable(true)
             setPositiveButton("df") { _, _ ->
 

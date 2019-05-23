@@ -12,3 +12,9 @@ var Drawable.tint: Int
         if (Build.VERSION.SDK_INT >= 21) setTint(value)
         else DrawableCompat.setTint(DrawableCompat.wrap(this).mutate(), value)
     }
+
+fun Drawable.tint(@ColorInt color: Int) {
+    val drawable = DrawableCompat.wrap(this).mutate()
+    DrawableCompat.setTint(drawable, color)
+    drawable.invalidateSelf()
+}
