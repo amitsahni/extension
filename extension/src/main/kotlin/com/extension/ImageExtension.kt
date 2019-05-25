@@ -147,6 +147,8 @@ fun ImageView.loadSkipCache(image: String, @DrawableRes placeHolder: Int = -1, t
     val requestOptions = RequestOptions()
     requestOptions.placeholder(placeHolder)
     requestOptions.error(placeHolder)
+    requestOptions.skipMemoryCache(true)
+    requestOptions.diskCacheStrategy(DiskCacheStrategy.NONE)
     transformations?.also {
         requestOptions.transform(it)
     }
