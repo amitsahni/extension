@@ -59,12 +59,13 @@ class MainActivity : AppCompatActivity() {
 //            this?.path?.printInfo()
 //            image.setImageURI(Uri.fromFile(this))
 //        }
-        context.downloadBitmap(url) {
+        /*context.downloadBitmap(url) {
             this?.let {
                 image.setImageBitmap(this)
             }
-        }
-//        image.load(url)
+        }*/
+
+        image.load(url)
         url.isJson.printInfo()
         alert {
             setCancelable(true)

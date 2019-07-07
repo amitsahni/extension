@@ -31,22 +31,22 @@ fun Date.isSaturday() = calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY
 fun Date.isSunday() = calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY
 
 fun formatDate(
-    format: String = D.FORMAT,
-    timeZone: TimeZone = TimeZone.getDefault(),
-    locale: Locale = Locale.getDefault()
+        format: String = D.FORMAT,
+        locale: Locale = Locale.getDefault(),
+        timeZone: TimeZone = TimeZone.getDefault()
 ): DateFormat {
     val sdf = SimpleDateFormat(format, locale)
     sdf.timeZone = timeZone
     return sdf
 }
 
-fun String.parseDate(
+fun String?.parseDate(
     format: String = D.FORMAT,
     locale: Locale = Locale.getDefault(),
     timeZone: TimeZone = TimeZone.getDefault()
 ): Date? {
     return try {
-        formatDate(format, timeZone, locale).parse(this)
+        formatDate(format, locale, timeZone).parse(this)
     } catch (e: ParseException) {
         null
     }
@@ -77,7 +77,7 @@ fun currentUTC(
     format: String = D.FORMAT,
     locale: Locale = Locale.getDefault()
 ): String {
-    return formatDate(format, TimeZone.getDefault(), locale).format(now.toUTC)
+    return formatDate(format, locale, TimeZone.getDefault()).format(now.toUTC)
 }
 
 val Date.toUTC: Date

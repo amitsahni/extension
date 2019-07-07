@@ -10,6 +10,8 @@ import android.os.Build
 import android.support.annotation.ColorRes
 import android.support.annotation.DrawableRes
 import android.support.v7.widget.AppCompatImageView
+import android.text.SpannableString
+import android.text.Spanned
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -27,6 +29,36 @@ import java.io.File
 
 
 /*------------------------------------ImageView-----------------------------------------------*/
+
+fun String.drawableSpan(drawable: Drawable?, start: Int, end: Int): SpannableString {
+    return SpannableString(this).apply {
+        drawable?.let {
+            it.setBounds(0, 0, it.intrinsicWidth, it.intrinsicHeight)
+            val imageSpan = DrawableSpan(it, 5, 5)
+            setSpan(imageSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+    }
+}
+
+fun String.drawableSpanStart(drawable: Drawable?): SpannableString {
+    return SpannableString(this).apply {
+        drawable?.let {
+            it.setBounds(0, 0, it.intrinsicWidth, it.intrinsicHeight)
+            val imageSpan = DrawableSpan(it, 5, 5)
+            setSpan(imageSpan, 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+    }
+}
+
+fun String.drawableSpanEnd(drawable: Drawable?): SpannableString {
+    return SpannableString(this).apply {
+        drawable?.let {
+            it.setBounds(0, 0, it.intrinsicWidth, it.intrinsicHeight)
+            val imageSpan = DrawableSpan(it, 5, 5)
+            setSpan(imageSpan, length - 1, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+    }
+}
 
 var ImageView.foregroundTint: Int
     @ColorRes get() = foregroundTint
