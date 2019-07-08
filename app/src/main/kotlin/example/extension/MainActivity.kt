@@ -1,6 +1,8 @@
 package example.extension
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
@@ -8,6 +10,7 @@ import android.util.Log
 import com.activity.Builder
 import com.extension.*
 import com.extension.P.defaultPrefs
+import jp.wasabeef.glide.transformations.CropCircleTransformation
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.inject
 import org.koin.android.scope.ext.android.bindScope
@@ -65,7 +68,10 @@ class MainActivity : AppCompatActivity() {
             }
         }*/
 
-        image.load(url)
+        image.load<Drawable>(url, -1, CropCircleTransformation()) {
+            this?.printInfo()
+            image?.setImageDrawable(this)
+        }
         url.isJson.printInfo()
         alert {
             setCancelable(true)

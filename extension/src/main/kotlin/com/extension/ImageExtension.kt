@@ -98,21 +98,21 @@ fun ImageView.loadSkipCache(image: String, @DrawableRes placeHolder: Int = -1) {
 }
 
 @SuppressLint("CheckResult")
-fun ImageView.load(image: String, @DrawableRes placeHolder: Int = -1, f: Bitmap?.() -> Unit) {
+inline fun <reified T> ImageView.load(image: String, @DrawableRes placeHolder: Int = -1, crossinline f: T?.() -> Unit) {
     val requestOptions = RequestOptions()
     requestOptions.placeholder(placeHolder)
     requestOptions.error(placeHolder)
     Glide.with(context.applicationContext)
-            .asBitmap()
+            .`as`(T::class.java)
             .load(image)
             .apply(requestOptions)
-            .listener(object : RequestListener<Bitmap> {
-                override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Bitmap>?, isFirstResource: Boolean): Boolean {
+            .listener(object : RequestListener<T> {
+                override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<T>?, isFirstResource: Boolean): Boolean {
                     f(null)
                     return false
                 }
 
-                override fun onResourceReady(resource: Bitmap?, model: Any?, target: Target<Bitmap>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                override fun onResourceReady(resource: T?, model: Any?, target: Target<T>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
                     f(resource)
                     return true
                 }
@@ -122,23 +122,23 @@ fun ImageView.load(image: String, @DrawableRes placeHolder: Int = -1, f: Bitmap?
 }
 
 @SuppressLint("CheckResult")
-fun ImageView.loadSkipCache(image: String, @DrawableRes placeHolder: Int = -1, f: Bitmap?.() -> Unit) {
+inline fun <reified T> ImageView.loadSkipCache(image: String, @DrawableRes placeHolder: Int = -1, crossinline f: T?.() -> Unit) {
     val requestOptions = RequestOptions()
     requestOptions.placeholder(placeHolder)
     requestOptions.error(placeHolder)
     requestOptions.skipMemoryCache(true)
     requestOptions.diskCacheStrategy(DiskCacheStrategy.NONE)
     Glide.with(context.applicationContext)
-            .asBitmap()
+            .`as`(T::class.java)
             .load(image)
             .apply(requestOptions)
-            .listener(object : RequestListener<Bitmap> {
-                override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Bitmap>?, isFirstResource: Boolean): Boolean {
+            .listener(object : RequestListener<T> {
+                override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<T>?, isFirstResource: Boolean): Boolean {
                     f(null)
                     return false
                 }
 
-                override fun onResourceReady(resource: Bitmap?, model: Any?, target: Target<Bitmap>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                override fun onResourceReady(resource: T?, model: Any?, target: Target<T>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
                     f(resource)
                     return true
                 }
@@ -148,7 +148,7 @@ fun ImageView.loadSkipCache(image: String, @DrawableRes placeHolder: Int = -1, f
 }
 
 @SuppressLint("CheckResult")
-fun ImageView.load(image: String, @DrawableRes placeHolder: Int = -1, transformations: Transformation<Bitmap>?, f: Bitmap?.() -> Unit) {
+inline fun <reified T> ImageView.load(image: String, @DrawableRes placeHolder: Int = -1, transformations: Transformation<Bitmap>?, crossinline f: T?.() -> Unit) {
     val requestOptions = RequestOptions()
     requestOptions.placeholder(placeHolder)
     requestOptions.error(placeHolder)
@@ -156,16 +156,16 @@ fun ImageView.load(image: String, @DrawableRes placeHolder: Int = -1, transforma
         requestOptions.transform(it)
     }
     Glide.with(context.applicationContext)
-            .asBitmap()
+            .`as`(T::class.java)
             .load(image)
             .apply(requestOptions)
-            .listener(object : RequestListener<Bitmap> {
-                override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Bitmap>?, isFirstResource: Boolean): Boolean {
+            .listener(object : RequestListener<T> {
+                override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<T>?, isFirstResource: Boolean): Boolean {
                     f(null)
                     return false
                 }
 
-                override fun onResourceReady(resource: Bitmap?, model: Any?, target: Target<Bitmap>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                override fun onResourceReady(resource: T?, model: Any?, target: Target<T>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
                     f(resource)
                     return true
                 }
@@ -175,7 +175,7 @@ fun ImageView.load(image: String, @DrawableRes placeHolder: Int = -1, transforma
 }
 
 @SuppressLint("CheckResult")
-fun ImageView.loadSkipCache(image: String, @DrawableRes placeHolder: Int = -1, transformations: Transformation<Bitmap>?, f: Bitmap?.() -> Unit) {
+inline fun <reified T>  ImageView.loadSkipCache(image: String, @DrawableRes placeHolder: Int = -1, transformations: Transformation<Bitmap>?, crossinline f: T?.() -> Unit) {
     val requestOptions = RequestOptions()
     requestOptions.placeholder(placeHolder)
     requestOptions.error(placeHolder)
@@ -185,16 +185,16 @@ fun ImageView.loadSkipCache(image: String, @DrawableRes placeHolder: Int = -1, t
         requestOptions.transform(it)
     }
     Glide.with(context.applicationContext)
-            .asBitmap()
+            .`as`(T::class.java)
             .load(image)
             .apply(requestOptions)
-            .listener(object : RequestListener<Bitmap> {
-                override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Bitmap>?, isFirstResource: Boolean): Boolean {
+            .listener(object : RequestListener<T> {
+                override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<T>?, isFirstResource: Boolean): Boolean {
                     f(null)
                     return false
                 }
 
-                override fun onResourceReady(resource: Bitmap?, model: Any?, target: Target<Bitmap>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                override fun onResourceReady(resource: T?, model: Any?, target: Target<T>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
                     f(resource)
                     return true
                 }
@@ -252,7 +252,7 @@ fun Context.clearImageCache() {
     }.execute()
 }
 
-private class BaseTarget<T> : Target<T> {
+private class BaseTarget<T>(val width: Int = SIZE_ORIGINAL, val height: Int = SIZE_ORIGINAL) : Target<T> {
     override fun onResourceReady(resource: T, transition: Transition<in T>?) {
     }
 
@@ -284,7 +284,7 @@ private class BaseTarget<T> : Target<T> {
     }
 
     override fun getSize(cb: SizeReadyCallback) {
-        cb.onSizeReady(SIZE_ORIGINAL, SIZE_ORIGINAL)
+        cb.onSizeReady(width, height)
     }
 
     override fun removeCallback(cb: SizeReadyCallback) {

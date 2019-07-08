@@ -49,6 +49,7 @@ dependencies {
     //    implementation 'com.amitsahni:extension:0.0.1-alpha'
     // Add dependency
     implementation 'com.crashlytics.sdk.android:crashlytics:2.10.0'
+    implementation 'jp.wasabeef:glide-transformations:3.3.0'
 }
 
 task versionName() {

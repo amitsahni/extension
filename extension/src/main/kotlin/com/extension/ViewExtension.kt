@@ -18,6 +18,7 @@ import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
+import java.util.*
 
 
 /*------------------------------------View---------------------------------------------*/
@@ -235,9 +236,15 @@ var View.backgroundTint: Int
 
 /*------------------------------------ViewGroup-----------------------------------------------*/
 
-inline fun ViewGroup.forEach(action: (View) -> Unit) {
+fun ViewGroup.forEach(action: (View) -> Unit) {
     for (index in 0 until childCount) {
         action(getChildAt(index))
+    }
+}
+
+fun ViewGroup.forEachIndexed(action: (index: Int, View) -> Unit) {
+    for ((index, ind) in (0 until childCount).withIndex()) {
+        action(index, getChildAt(index))
     }
 }
 
@@ -295,12 +302,12 @@ var TextView.drawableBottom: Int
     }
 
 
-fun TextView.toUpperCase() {
-    text = value.toUpperCase()
+fun TextView.toUpperCase(locale : Locale = Locale.getDefault()) {
+    text = value.toUpperCase(locale)
 }
 
-fun TextView.toLowerCase() {
-    text = value.toLowerCase()
+fun TextView.toLowerCase(locale : Locale = Locale.getDefault()) {
+    text = value.toLowerCase(locale)
 }
 
 var TextView.setTextSize: Float
@@ -317,6 +324,10 @@ var TextView.textColor: Int
     @ColorRes get() = textColor
     set(value) {
         this.setTextColor(this.context.resColor(value))
+}
+
+fun TextView.clear() {
+    text = ""
 }
 
 /*------------------------------------EditText-----------------------------------------------*/
