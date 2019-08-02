@@ -160,12 +160,16 @@ fun Context.share(text: String, subject: String = ""): Boolean {
     }
 }
 
-fun Context.email(vararg email: String, subject: String = "", text: String = ""): Boolean {
-    val intent = Intent(ACTION_SENDTO)
+fun Context.email(
+        address: Array<String> = emptyArray(),
+        subject: String = "",
+        text: String = ""
+): Boolean {
+    val intent = Intent(Intent.ACTION_SENDTO)
     intent.data = Uri.parse("mailto:")
-    intent.putExtra(EXTRA_EMAIL, arrayOf(email))
-    if (subject.isNotBlank()) intent.putExtra(EXTRA_SUBJECT, subject)
-    if (text.isNotBlank()) intent.putExtra(EXTRA_TEXT, text)
+    intent.putExtra(Intent.EXTRA_EMAIL, address)
+    if (subject.isNotBlank()) intent.putExtra(Intent.EXTRA_SUBJECT, subject)
+    if (text.isNotBlank()) intent.putExtra(Intent.EXTRA_TEXT, text)
     if (intent.resolveActivity(packageManager) != null) {
         startActivity(intent)
         return true
