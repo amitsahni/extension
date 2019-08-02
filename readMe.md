@@ -9,7 +9,7 @@ repositories {
 ```
 
 ```
-implementation 'com.amitsahni:extension:0.0.1-alpha04'
+implementation 'com.amitsahni:extension:0.0.1-alpha10'
 ```
 
 ### [Activity Extension](https://github.com/amitsahni/extension/blob/dev/extension/src/main/kotlin/com/extension/ActivityExtension.kt)
