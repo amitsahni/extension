@@ -1,6 +1,6 @@
 package example.extension
 
-import android.support.v7.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import com.activity.ActivityManager
 import org.koin.android.viewmodel.ext.koin.viewModel
 import org.koin.dsl.module.module

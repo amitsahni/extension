@@ -1,7 +1,7 @@
 @file:JvmName("ContextUtils")
 package com.extension
 
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
@@ -10,9 +10,9 @@ import android.net.Uri
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
-import android.support.annotation.*
-import android.support.v4.app.ActivityOptionsCompat
-import android.support.v4.content.ContextCompat
+import androidx.annotation.*
+import androidx.core.app.ActivityOptionsCompat
+import androidx.core.content.ContextCompat
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View

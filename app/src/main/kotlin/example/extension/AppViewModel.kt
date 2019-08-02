@@ -1,7 +1,7 @@
 package example.extension
 
 import android.app.Application
-import android.arch.lifecycle.AndroidViewModel
+import androidx.lifecycle.AndroidViewModel
 import android.util.Log
 
 // Injected by constructor

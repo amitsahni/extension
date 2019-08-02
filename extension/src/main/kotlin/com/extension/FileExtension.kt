@@ -11,7 +11,7 @@ import android.os.Environment
 import android.os.Environment.MEDIA_MOUNTED
 import android.provider.DocumentsContract
 import android.provider.MediaStore
-import android.support.v4.content.CursorLoader
+import androidx.loader.content.CursorLoader
 import java.io.File
 
 
@@ -140,7 +140,7 @@ private fun Context.getRealPathAPI11to18(contentUri: Uri): String? {
     val proj = arrayOf(MediaStore.Images.Media.DATA)
     var result: String? = null
 
-    val cursorLoader = CursorLoader(this, contentUri, proj, null, null, null)
+    val cursorLoader = androidx.loader.content.CursorLoader(this, contentUri, proj, null, null, null)
     val cursor = cursorLoader.loadInBackground()
 
     cursor?.let {
