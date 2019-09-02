@@ -2,8 +2,8 @@ package example.extension
 
 import android.content.Context
 import com.activity.Builder
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 class Components : KoinComponent {
     val context: Context by inject()

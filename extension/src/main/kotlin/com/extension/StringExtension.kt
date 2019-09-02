@@ -4,6 +4,7 @@ package com.extension
 import android.text.Editable
 import android.util.Patterns
 import com.google.gson.GsonBuilder
+import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
 
 
@@ -61,10 +62,18 @@ fun join(vararg params: Any?) = params.joinToString()
 fun Any.toJson(): String = try {
     G.gson.toJson(this)
 } catch (e: Exception) {
+    e.printStackTrace()
     ""
 }
 
-inline fun <reified T : Any> String?.fromJson() = G.gson.fromJson<T>(this, T::class.java)
+inline fun <reified T : Any> String?.fromJson(): T? {
+    return try {
+        G.gson.fromJson<T>(this, T::class.java)
+    } catch (e: JsonSyntaxException) {
+        e.printStackTrace()
+        null
+    }
+}
 
 fun String.toEditable(): Editable = Editable.Factory.getInstance().newEditable(this)
 
@@ -82,11 +91,16 @@ val String.isJson: Boolean
         return false
     }
 
-fun <T> String?.fromTypedJson(): T {
+fun <T> String?.fromTypedJson(): T? {
     val type = object : TypeToken<T>() {
 
     }.type
-    return G.gson.fromJson<T>(this, type)
+    return try {
+        G.gson.fromJson<T>(this, type)
+    } catch (e: JsonSyntaxException) {
+        e.printStackTrace()
+        null
+    }
 }
 
 fun <T> Any?.toTypedJson(): String {

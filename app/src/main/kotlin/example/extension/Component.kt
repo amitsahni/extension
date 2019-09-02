@@ -2,14 +2,15 @@ package example.extension
 
 import androidx.appcompat.app.AlertDialog
 import com.activity.ActivityManager
-import org.koin.android.viewmodel.ext.koin.viewModel
-import org.koin.dsl.module.module
+import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.core.qualifier.named
+import org.koin.dsl.module
 
 // just declare it
 val myModule = module {
     single { ActivityManager.with(get()) }
     single { AlertDialog.Builder(get()) }
-    factory("factory") { HttpModule(get()) }
+    factory(named<MainActivity>()) { HttpModule(get()) }
 }
 
 val viewModelModule = module {
@@ -18,6 +19,8 @@ val viewModelModule = module {
 }
 
 val scope = module {
-    scope("mainActivity", "http") { HttpModule(get()) }
+    scope(named<MainActivity>()) {
+        scoped { HttpModule(get()) }
+    }
 }
 

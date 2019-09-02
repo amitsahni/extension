@@ -1,21 +1,19 @@
 package example.extension
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import android.util.Log
 import com.activity.Builder
 import com.extension.*
 import com.extension.P.defaultPrefs
 import jp.wasabeef.glide.transformations.CropCircleTransformation
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.inject
-import org.koin.android.scope.ext.android.bindScope
-import org.koin.android.scope.ext.android.getOrCreateScope
-import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.androidx.scope.currentScope
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -24,8 +22,8 @@ class MainActivity : AppCompatActivity() {
     private val id1 by extra("Hello", "fg")
     val service: Builder by inject()
     val context: Context by inject()
-    val httpModule: HttpModule by inject("http")
-    val httpModule2: HttpModule by inject("factory")
+    val httpModule: HttpModule by currentScope.inject()
+    val httpModule2: HttpModule by currentScope.inject()
     val viewModels by viewModel<AppViewModel>()
     val abcModule by inject<AbcModule>()
     val components: Components by lazy {
@@ -36,7 +34,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        bindScope(getOrCreateScope("mainActivity"))
 
         setContentView(R.layout.activity_main)
         Log.i(localClassName, "ids = $id1")
