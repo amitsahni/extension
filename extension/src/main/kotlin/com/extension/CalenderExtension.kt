@@ -95,4 +95,14 @@ val Date.toUTC: Date
         return Date(gmtMillis)
     }
 
+fun tomorrow(): Date {
+    val cal = calendar
+    cal.add(Calendar.DAY_OF_YEAR, 1)
+    return cal.time
+}
 
+fun addDays(days : Int): Date {
+    val cal = calendar
+    cal.add(Calendar.DAY_OF_YEAR, days)
+    return cal.time
+}

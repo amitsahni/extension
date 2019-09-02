@@ -330,6 +330,16 @@ fun TextView.clear() {
     text = ""
 }
 
+fun TextView.toCamelCase() {
+    text = value.toCamelCase()
+}
+
+var TextView.resHintString: Int
+    get() = resHintString
+    set(value) {
+        setHint(value)
+    }
+
 /*------------------------------------EditText-----------------------------------------------*/
 
 fun EditText.afterTextChanged(afterTextChanged: (Editable?) -> Unit) {
