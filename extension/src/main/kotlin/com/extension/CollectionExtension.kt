@@ -13,3 +13,8 @@ fun <T> List<T>.midElement(): T {
 
 val <T> Collection<T>.midIndex: Int
     get() = if (size == 0) 0 else size / 2
+
+
+fun <T> List<T>?.toMutable(): MutableList<T> {
+    return (this ?: emptyList<T>()).toMutableList()
+}

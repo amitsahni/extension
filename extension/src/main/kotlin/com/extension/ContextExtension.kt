@@ -1,7 +1,6 @@
 @file:JvmName("ContextUtils")
 package com.extension
 
-import androidx.appcompat.app.AppCompatActivity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
@@ -10,13 +9,16 @@ import android.net.Uri
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
-import androidx.annotation.*
-import androidx.core.app.ActivityOptionsCompat
-import androidx.core.content.ContextCompat
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityOptionsCompat
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
+import java.io.File
 
 /**
  * Add the [Intent.FLAG_ACTIVITY_CLEAR_TASK] flag to the [Intent].
@@ -97,7 +99,7 @@ fun Context.resColorStateList(@ColorRes colorRes: Int) = ContextCompat.getColorS
 fun Context.resString(@StringRes stringRes: Int) = getString(stringRes)
 
 fun Context.resString(@StringRes stringRes: Int, vararg formatArgs: Any) =
-    getString(stringRes, formatArgs)
+        getString(stringRes, formatArgs)
 
 fun Context.resDrawable(@DrawableRes drawableRes: Int) = ContextCompat.getDrawable(this, drawableRes)
 
@@ -112,7 +114,7 @@ fun Context.resIntArray(@ArrayRes intArrRes: Int) = this.resources.getIntArray(i
 fun Context.resStrArray(@ArrayRes strArrRes: Int) = this.resources.getStringArray(strArrRes)
 
 fun Context.inflateLayout(@LayoutRes layoutId: Int, parent: ViewGroup? = null, attachToRoot: Boolean = false): View =
-    LayoutInflater.from(this).inflate(layoutId, parent, attachToRoot)
+        LayoutInflater.from(this).inflate(layoutId, parent, attachToRoot)
 
 inline fun <reified T : AppCompatActivity> Context.intent() = Intent(this, T::class.java)
 
@@ -140,18 +142,25 @@ inline fun <reified T : AppCompatActivity> Context.startActivity(@AnimRes enterR
 }
 
 inline fun <reified T : AppCompatActivity> Context.startActivity(@AnimRes enterResId: Int = 0, @AnimRes exitResId: Int = 0,
-                                                                                        body: Intent.() -> Unit) {
+                                                                 body: Intent.() -> Unit) {
     val intent = Intent(this, T::class.java)
     intent.body()
     val optionsCompat = ActivityOptionsCompat.makeCustomAnimation(this, enterResId, exitResId)
     ContextCompat.startActivity(this, intent, optionsCompat.toBundle())
 }
 
-fun Context.share(text: String, subject: String = ""): Boolean {
+fun Context.share(text: String? = null, subject: String? = null, file: File? = null): Boolean {
     val intent = Intent()
     intent.type = "text/plain"
-    intent.putExtra(EXTRA_SUBJECT, subject)
-    intent.putExtra(EXTRA_TEXT, text)
+    subject?.let {
+        intent.putExtra(EXTRA_SUBJECT, subject)
+    }
+    text?.let {
+        intent.putExtra(EXTRA_TEXT, text)
+    }
+    file?.let {
+        intent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + it.path))
+    }
     return try {
         startActivity(createChooser(intent, null))
         true
@@ -212,7 +221,11 @@ fun Context.sendSMS(number: String, text: String = ""): Boolean {
 }
 
 fun Context.rate(): Boolean =
-    browse("market://details?id=$packageName") or browse("http://play.google.com/store/apps/details?id=$packageName")
+        browse("market://details?id=$packageName") or browse("http://play.google.com/store/apps/details?id=$packageName")
+
+fun Context.areNotificationsEnabled(): Boolean {
+    return NotificationManagerCompat.from(this).areNotificationsEnabled()
+}
 
 
 fun runOnUiThread(f: () -> Unit) {

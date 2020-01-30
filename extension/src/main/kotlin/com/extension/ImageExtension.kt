@@ -1,4 +1,5 @@
 @file:JvmName("ImageUtils")
+
 package com.extension
 
 import android.annotation.SuppressLint
@@ -7,12 +8,12 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.AsyncTask
 import android.os.Build
-import androidx.annotation.ColorRes
-import androidx.annotation.DrawableRes
-import androidx.appcompat.widget.AppCompatImageView
 import android.text.SpannableString
 import android.text.Spanned
 import android.widget.ImageView
+import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
+import androidx.appcompat.widget.AppCompatImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.Transformation
@@ -23,10 +24,8 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.SizeReadyCallback
 import com.bumptech.glide.request.target.Target
-import com.bumptech.glide.request.target.Target.SIZE_ORIGINAL
 import com.bumptech.glide.request.transition.Transition
 import java.io.File
-
 
 /*------------------------------------ImageView-----------------------------------------------*/
 
@@ -72,10 +71,13 @@ var ImageView.foregroundTint: Int
     }
 
 @SuppressLint("CheckResult")
-fun ImageView.load(image: String, @DrawableRes placeHolder: Int = -1) {
+fun ImageView.load(image: String, @DrawableRes placeHolder: Int = -1, transformations: Transformation<Bitmap>? = null) {
     val requestOptions = RequestOptions()
     requestOptions.placeholder(placeHolder)
     requestOptions.error(placeHolder)
+    transformations?.also {
+        requestOptions.transform(it)
+    }
     Glide.with(context.applicationContext)
             .asBitmap()
             .load(image)
@@ -84,12 +86,15 @@ fun ImageView.load(image: String, @DrawableRes placeHolder: Int = -1) {
 }
 
 @SuppressLint("CheckResult")
-fun ImageView.loadSkipCache(image: String, @DrawableRes placeHolder: Int = -1) {
+fun ImageView.loadSkipCache(image: String, @DrawableRes placeHolder: Int = -1, transformations: Transformation<Bitmap>? = null) {
     val requestOptions = RequestOptions()
     requestOptions.placeholder(placeHolder)
     requestOptions.error(placeHolder)
     requestOptions.skipMemoryCache(true)
     requestOptions.diskCacheStrategy(DiskCacheStrategy.NONE)
+    transformations?.also {
+        requestOptions.transform(it)
+    }
     Glide.with(context.applicationContext)
             .asBitmap()
             .load(image)
@@ -175,7 +180,7 @@ inline fun <reified T> ImageView.load(image: String, @DrawableRes placeHolder: I
 }
 
 @SuppressLint("CheckResult")
-inline fun <reified T>  ImageView.loadSkipCache(image: String, @DrawableRes placeHolder: Int = -1, transformations: Transformation<Bitmap>?, crossinline f: T?.() -> Unit) {
+inline fun <reified T> ImageView.loadSkipCache(image: String, @DrawableRes placeHolder: Int = -1, transformations: Transformation<Bitmap>?, crossinline f: T?.() -> Unit) {
     val requestOptions = RequestOptions()
     requestOptions.placeholder(placeHolder)
     requestOptions.error(placeHolder)
@@ -252,7 +257,7 @@ fun Context.clearImageCache() {
     }.execute()
 }
 
-private class BaseTarget<T>(val width: Int = SIZE_ORIGINAL, val height: Int = SIZE_ORIGINAL) : Target<T> {
+private class BaseTarget<T>(val width: Int = Target.SIZE_ORIGINAL, val height: Int = Target.SIZE_ORIGINAL) : Target<T> {
     override fun onResourceReady(resource: T, transition: Transition<in T>?) {
     }
 

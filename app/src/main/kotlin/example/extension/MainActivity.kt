@@ -52,8 +52,6 @@ class MainActivity : AppCompatActivity() {
         Log.i(localClassName, "components.context = ${components.context}")
         Log.i(localClassName, "components.service = ${components.service}")
         Log.i(localClassName, "AbcModule().components.context = ${abcModule.init()}")
-        "Hello".printInfo()
-        "Hello".printError()
         text.drawableStart = android.R.drawable.ic_delete
 //        context.downloadFile(url) {
 //            this?.path?.printInfo()
@@ -66,10 +64,8 @@ class MainActivity : AppCompatActivity() {
         }*/
 
         image.load<Drawable>(url, -1, CropCircleTransformation()) {
-            this?.printInfo()
             image?.setImageDrawable(this)
         }
-        url.isJson.printInfo()
         alert {
             setCancelable(true)
             setPositiveButton("df") { _, _ ->
@@ -127,14 +123,10 @@ class MainActivity : AppCompatActivity() {
 //            it.context
 //        }
         val prefs = defaultPrefs(context)
-        prefs.printInfo()
         val prefs1 = defaultPrefs(context)
-        prefs1.printInfo()
         val prefs2 = defaultPrefs(context)
-        prefs2.printInfo()
         prefs["asdf"] = "Hello"
-        val d = prefs["asdf","jhkj"]
-        d.printInfo()
+        val d = prefs["asdf", "jhkj"]
         btn.backgroundTint = R.color.error_color_material_dark
         btn.disable()
         btn.resString = R.string.abc_action_bar_home_description
@@ -145,7 +137,7 @@ class MainActivity : AppCompatActivity() {
 
         }
         text.backgroundTint = R.color.notification_icon_bg_color
-        val name  = str ?: "dfasdf"
+        val name = str ?: "dfasdf"
         //image.foregroundTint(R.color.error_color_material_dark)
 //        image.foregroundTint = R.color.error_color_material_dark
 //        image.drawable.tint = resColor(R.color.error_color_material_dark)

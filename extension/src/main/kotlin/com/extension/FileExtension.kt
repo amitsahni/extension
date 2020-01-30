@@ -11,7 +11,6 @@ import android.os.Environment
 import android.os.Environment.MEDIA_MOUNTED
 import android.provider.DocumentsContract
 import android.provider.MediaStore
-import androidx.loader.content.CursorLoader
 import java.io.File
 
 
@@ -102,8 +101,8 @@ fun Context.getPath(uri: Uri): String? {
  * @return The value of the _data column, which is typically a file path.
  */
 private fun getDataColumn(
-    context: Context, uri: Uri?, selection: String?,
-    selectionArgs: Array<String>?
+        context: Context, uri: Uri?, selection: String?,
+        selectionArgs: Array<String>?
 ): String? {
 
     var cursor: Cursor? = null
@@ -116,6 +115,8 @@ private fun getDataColumn(
             val index = cursor.getColumnIndexOrThrow(column)
             return cursor.getString(index)
         }
+    } catch (e: Exception) {
+        e.printStackTrace()
     } finally {
         cursor?.close()
     }
@@ -198,12 +199,12 @@ private fun Context.getRealPathAPI19(uri: Uri): String? {
             return getDataColumn(this, contentUri, selection, selectionArgs)
         }// MediaProvider
         // DownloadsProvider
-    } else if ("content".equals(uri.scheme!!, ignoreCase = true)) {
+    } else if ("content".equals(uri.scheme, ignoreCase = true)) {
 
         // Return the remote address
         return if (uri.isGooglePhotosUri()) uri.lastPathSegment else getDataColumn(this, uri, null, null)
 
-    } else if ("file".equals(uri.scheme!!, ignoreCase = true)) {
+    } else if ("file".equals(uri.scheme, ignoreCase = true)) {
         return uri.path
     }// File
     // MediaStore (and general)
@@ -242,4 +243,5 @@ private fun Uri.isMediaDocument(): Boolean {
 private fun Uri.isGooglePhotosUri(): Boolean {
     return "com.google.android.apps.photos.content" == authority
 }
+
 

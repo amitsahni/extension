@@ -1,16 +1,12 @@
 @file:JvmName("ViewUtils")
+
 package com.extension
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.os.Build
-import androidx.annotation.*
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import androidx.core.graphics.drawable.DrawableCompat
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import androidx.appcompat.widget.*
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.TypedValue
@@ -18,6 +14,14 @@ import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
+import androidx.annotation.*
+import androidx.appcompat.widget.*
+import androidx.core.graphics.drawable.DrawableCompat
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.coroutines.*
 import java.util.*
 
 
@@ -35,6 +39,18 @@ fun View.gone() {
     visibility = View.GONE
 }
 
+fun View.isVisible(): Boolean {
+    return visibility == View.VISIBLE
+}
+
+fun View.isInvisible(): Boolean {
+    return visibility == View.INVISIBLE
+}
+
+fun View.isGone(): Boolean {
+    return visibility == View.GONE
+}
+
 /**
  * Toggle a view's visibility
  */
@@ -46,17 +62,6 @@ fun View.toggleVisibility() {
     }
 }
 
-
-/**
- * Extension method to provide simpler access to {@link View#getResources()#getString(int)}.
- */
-var View.resString: Int
-    @StringRes get() = resString
-    set(value) {
-        this.context?.resString(value).orEmpty()
-    }
-
-
 /**
  * Extension method to show a keyboard for View.
  */
@@ -64,6 +69,15 @@ fun View.showKeyboard() {
     val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     this.requestFocus()
     imm.showSoftInput(this, 0)
+}
+
+/**
+ * Extension method to show a keyboard for View.
+ */
+fun View.showForceKeyboard() {
+    val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    this.requestFocus()
+    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
 }
 
 /**
@@ -167,6 +181,7 @@ var View.setWidth: Int
             layoutParams = lp
         }
     }
+
 /**
  * Extension method to resize View with height & width.
  */
@@ -179,11 +194,19 @@ fun View.resize(width: Int, height: Int) {
     }
 }
 
+var scope: CoroutineScope? = null
 /**
  * Set an onclick listener
  */
 @Suppress("UNCHECKED_CAST")
-fun <T : View> T.click(block: T.() -> Unit) = setOnClickListener { block(it as T) }
+fun <T : View> T.click(debounceMilli: Long = 300L, block: T.() -> Unit) = setOnClickListener {
+    scope?.cancel()
+    scope = CoroutineScope(Dispatchers.Main)
+    scope?.launch {
+        delay(debounceMilli)
+        block(it as T)
+    }
+}
 
 /**
  * Extension method to set OnLongClickListener on a view.
@@ -197,11 +220,13 @@ fun <T : View> T.longClick(block: T.() -> Unit) = setOnLongClickListener {
 fun View.disable() {
     isEnabled = false
     alpha = 0.3f
+    isClickable = false
 }
 
 fun View.enable() {
     isEnabled = true
     alpha = 1.0f
+    isClickable = true
 }
 
 var View.backgroundTint: Int
@@ -302,11 +327,11 @@ var TextView.drawableBottom: Int
     }
 
 
-fun TextView.toUpperCase(locale : Locale = Locale.getDefault()) {
+fun TextView.toUpperCase(locale: Locale = Locale.getDefault()) {
     text = value.toUpperCase(locale)
 }
 
-fun TextView.toLowerCase(locale : Locale = Locale.getDefault()) {
+fun TextView.toLowerCase(locale: Locale = Locale.getDefault()) {
     text = value.toLowerCase(locale)
 }
 
@@ -324,7 +349,7 @@ var TextView.textColor: Int
     @ColorRes get() = textColor
     set(value) {
         this.setTextColor(this.context.resColor(value))
-}
+    }
 
 fun TextView.clear() {
     text = ""
@@ -338,6 +363,12 @@ var TextView.resHintString: Int
     get() = resHintString
     set(value) {
         setHint(value)
+    }
+
+var TextView.resString: Int
+    @StringRes get() = resString
+    set(value) {
+        setText(value)
     }
 
 /*------------------------------------EditText-----------------------------------------------*/
@@ -413,13 +444,13 @@ var androidx.swiperefreshlayout.widget.SwipeRefreshLayout.backgroundColor: Int
 
 val BottomNavigationView.selectedItem: Int
     get() {
-    for (i in 0 until menu.size()) {
-        if (menu.getItem(i).isChecked) {
-            return i
+        for (i in 0 until menu.size()) {
+            if (menu.getItem(i).isChecked) {
+                return i
+            }
         }
+        return 0
     }
-    return 0
-}
 
 fun BottomNavigationView.itemSelect(f: MenuItem.() -> Boolean) {
     setOnNavigationItemSelectedListener {
@@ -449,3 +480,42 @@ fun <T : androidx.recyclerview.widget.RecyclerView.ViewHolder> T.onClick(event: 
     return this
 }
 
+inline fun <reified T> Any.castAs(f: T.() -> Unit) {
+    if (this is T) {
+        f(this)
+    }
+}
+
+fun RecyclerView.addDivider(drawable: Drawable?, orientation: Int) {
+    drawable?.let {
+        addItemDecoration(object : DividerItemDecoration(context,
+                orientation) {
+            /*override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+                val position = parent.getChildAdapterPosition(view)
+                if (position == parent.adapter?.itemCount?.minus(1)) {
+                    outRect.setEmpty()
+                } else {
+                    super.getItemOffsets(outRect, view, parent, state)
+                }
+            }*/
+
+            override fun onDraw(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
+                val left = parent.paddingLeft
+                val right = parent.width - parent.paddingRight
+
+                val childCount = parent.childCount
+                for (i in 0 until childCount - 1) {
+                    val child = parent.getChildAt(i)
+
+                    val params = child.layoutParams as RecyclerView.LayoutParams
+
+                    val top = child.bottom + params.bottomMargin
+                    val bottom = top + it.intrinsicHeight
+
+                    it.setBounds(left, top, right, bottom)
+                    it.draw(c)
+                }
+            }
+        })
+    }
+}

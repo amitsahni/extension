@@ -110,5 +110,7 @@ fun <T> Any?.toTypedJson(): String {
     return G.gson.toJson(this, type)
 }
 
-
-
+inline fun <reified T> T.deepCopy(): T {
+    val stringProject = G.gson.toJson(this, T::class.java)
+    return G.gson.fromJson(stringProject, T::class.java)
+}
